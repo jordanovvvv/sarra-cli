@@ -264,7 +264,7 @@ echo "Started at $(sarra time now)"
 
 ## License
 
-See LICENSE file for details.
+See the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
