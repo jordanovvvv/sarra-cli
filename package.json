@@ -1,0 +1,29 @@
+{
+  "name": "sarra",
+  "version": "0.1.0",
+  "description": "Daily developer enhancement tools",
+  "type": "commonjs",
+  "bin": {
+    "sarra": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "dist/commands/id/help.md",
+    "src/commands/crypto/help.md",
+    "src/commands/data/help.md",
+    "src/commands/time/help.md"
+  ],
+  "scripts": {
+    "dev": "npm run build && npm link",
+    "build": "tsc && node src/scripts/copy-assets.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^14.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+
+import { Command } from "commander";
+
+import { idCommands } from "./commands/id";
+import { cryptoCommands } from "./commands/crypto";
+import { dataCommands } from "./commands/data";
+import { timeCommands } from "./commands/time";
+import chalk from "chalk";
+
+const program = new Command();
+
+program
+  .name("sarra")
+  .description("Daily developer ability enhancement tools")
+  .version("0.1.0")
+  .showHelpAfterError()
+  .helpOption("-h, --help", "Display help for command");
+
+// pretify main help output
+program.addHelpText(
+  "after",
+  `
+${chalk.bold.cyan("COMMAND GROUPS")}
+
+  ${chalk.green("id")}        Identifiers, tokens, UUIDs
+  ${chalk.green("crypto")}    Cryptography utilities
+  ${chalk.green("data")}      Data encoding and formatting
+  ${chalk.green("time")}      Date and time utilities
+
+${chalk.bold.cyan("EXAMPLES")}
+
+  ${chalk.green("sarra id uuid")}
+  ${chalk.green("sarra id random --length 32")}
+  ${chalk.green("sarra time now")}
+  ${chalk.green("sarra data json-pretty file.json")}
+
+${chalk.bold.cyan("TIPS")}
+
+  • Use ${chalk.yellow("--help")} on any command for more details
+  • Use ${chalk.yellow("--version")} to see the current version
+  • Global options must appear before subcommands
+`
+);
+
+program.addCommand(idCommands);
+program.addCommand(cryptoCommands);
+program.addCommand(dataCommands);
+program.addCommand(timeCommands);
+
+program.parse();
