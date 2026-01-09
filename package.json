@@ -11,8 +11,10 @@
     "dist/commands/id/help.md",
     "src/commands/crypto/help.md",
     "src/commands/data/help.md",
-    "src/commands/time/help.md"
+    "src/commands/time/help.md",
+    "LICENSE"
   ],
+  "license": "MIT",
   "scripts": {
     "dev": "npm run build && npm link",
     "build": "tsc && node src/scripts/copy-assets.js",
