@@ -205,8 +205,14 @@ Date and time utilities for scripting, logging, and debugging.
 #### Usage
 
 ```bash
-sarra time <command>
+sarra time now [options]
 ```
+
+#### Options
+
+- `--unix` - Output Unix timestamp (seconds)
+- `--ms` - Output Unix timestamp in milliseconds
+- `--format <format>` - Custom output format: `iso` | `date` | `time` (default: `iso`)
 
 #### Description
 
@@ -215,8 +221,20 @@ Provides simple utilities for working with dates and time values. Useful for scr
 #### Examples
 
 ```bash
-# Print the current timestamp (ISO 8601)
+# Print the current timestamp (ISO 8601, default)
 sarra time now
+
+# Print Unix timestamp in seconds
+sarra time now --unix
+
+# Print Unix timestamp in milliseconds
+sarra time now --ms
+
+# Print only the date (YYYY-MM-DD)
+sarra time now --format date
+
+# Print only the time (HH:MM:SS.sss)
+sarra time now --format time
 
 # Use in scripts
 echo "Started at $(sarra time now)"
@@ -224,8 +242,11 @@ echo "Started at $(sarra time now)"
 
 #### Output
 
-- Timestamp is printed in ISO 8601 format
-- Example: 2026-01-09T13:45:22.123Z
+- Default format is ISO 8601: `2026-01-09T13:45:22.123Z`
+- With `--unix`: `1736427922`
+- With `--ms`: `1736427922123`
+- With `--format date`: `2026-01-09`
+- With `--format time`: `13:45:22.123`
 
 #### Notes
 
