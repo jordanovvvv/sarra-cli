@@ -10,6 +10,111 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 <details open>
+<summary><h2>[0.3.0] - 2026-01-22</h2></summary>
+
+### Added
+
+#### SSL/TLS Certificate Generation
+
+- New `ssl` command group for certificate management
+- `generate` - Generate self-signed SSL certificates for local development
+  - Zero-dependency certificate generation using `node-forge`
+  - No OpenSSL installation required (works on Windows, macOS, Linux)
+  - RSA 2048-bit key generation
+  - SHA-256 signature algorithm
+  - Customizable domain name (`-d/--domain` option)
+  - Configurable validity period (`--val/--validity` option, max 365 days)
+  - Outputs `.crt` and `.key` files in PEM format
+  - Includes certificate extensions (basicConstraints, keyUsage, subjectAltName)
+  - Interactive file save location prompt
+- `letsencrypt` - Obtain trusted SSL certificates from Let's Encrypt
+  - Integration with Certbot for production-ready certificates
+  - Automatic Certbot installation detection with OS-specific installation instructions
+  - Two challenge methods:
+    - `--standalone` - Standalone mode (requires port 80)
+    - `--webroot` - Webroot mode for existing web servers
+  - `--staging` flag for testing without hitting rate limits
+  - Domain validation (blocks localhost and .local domains)
+  - Email requirement for renewal notifications (`-e/--email` option)
+  - Detailed error messages and troubleshooting tips
+  - Certificate location display on success
+  - Auto-renewal information and testing commands
+
+#### Documentation
+
+- Comprehensive SSL documentation in main README
+- New `docs/ssl-help.md` with detailed SSL guide
+- "Understanding the Difference" section explaining self-signed vs Let's Encrypt
+- Manual certificate trust instructions for macOS, Windows, and Linux
+- Prerequisites checklist for Let's Encrypt
+- Security notes and best practices
+- Troubleshooting guide for common SSL issues
+- SSL examples in "Examples by Use Case" section
+- DevOps & CI/CD workflow examples
+
+### Features
+
+#### Self-Signed Certificates
+
+- Perfect for local HTTPS development
+- Supports custom domains (e.g., `myapp.local`, `dev.example.com`)
+- Automatic directory creation for certificate output
+- Clear warnings about browser trust requirements
+- Instructions for manually trusting certificates on each OS
+
+#### Let's Encrypt Integration
+
+- Production-ready trusted certificates
+- Automatic browser trust (no manual installation needed)
+- 90-day validity with auto-renewal support
+- Rate limit protection via staging mode
+- Real-time certbot output display
+- Comprehensive prerequisite validation
+- DNS and network connectivity checks
+- Firewall and port 80 availability guidance
+
+#### Developer Experience
+
+- Colored terminal output for better readability
+- Step-by-step command examples
+- Clear distinction between development and production use cases
+- Quick reference table for command selection
+- Inline help with common issues and solutions
+
+### Changed
+
+#### Documentation Updates
+
+- Added SSL to main README command groups
+- Updated Quick Start section with SSL example
+- Extended "Examples by Use Case" with SSL scenarios
+- Added "Security Notes" section
+- Enhanced troubleshooting section with SSL issues
+- Updated roadmap with completed SSL feature
+
+#### Help Text
+
+- Updated main CLI help text to include `ssl` command group
+- Added SSL examples to command group overview
+
+### Security
+
+- ⚠️ Clear warnings about self-signed certificate limitations
+- ✅ Guidance on proper Let's Encrypt usage
+- 🔒 Best practices for certificate management
+- 📝 Recommendations against committing `.key` files to version control
+- 🔄 Certificate rotation reminders
+
+### Dependencies
+
+- Added `node-forge` for cryptographic operations
+- Uses system `certbot` for Let's Encrypt (external dependency, not bundled)
+
+</details>
+
+---
+
+<details>
 <summary><h2>[0.2.0] - 2026-01-21</h2></summary>
 
 ### Added
@@ -165,6 +270,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## Upgrade Guide
+
+### Upgrading from 0.2.0 to 0.3.0
+
+<details>
+<summary>Click to view upgrade instructions</summary>
+
+#### New Features
+
+**SSL Certificate Generation:**
+
+No breaking changes in this release. All existing commands continue to work as before.
+
+**New Commands:**
+
+```bash
+# Self-signed certificates for local development
+sarra ssl generate
+sarra ssl generate --domain myapp.local --validity 90
+
+# Let's Encrypt certificates for production
+sarra ssl letsencrypt -d example.com -e admin@example.com --standalone
+sarra ssl letsencrypt -d example.com -e admin@example.com --webroot /var/www/html
+```
+
+**Prerequisites for Let's Encrypt:**
+
+If you plan to use `sarra ssl letsencrypt`, install certbot first:
+
+```bash
+# macOS
+brew install certbot
+
+# Ubuntu/Debian
+sudo apt install certbot
+
+# Windows
+# Download from https://certbot.eff.org
+```
+
+**Making Self-Signed Certificates Trusted:**
+
+After generating self-signed certificates, you can optionally trust them on your development machine:
+
+```bash
+# macOS
+sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ./certs/localhost.crt
+
+# Windows (as Administrator)
+certutil -addstore -f "ROOT" ./certs/localhost.crt
+
+# Linux
+sudo cp ./certs/localhost.crt /usr/local/share/ca-certificates/
+sudo update-ca-certificates
+```
+
+</details>
 
 ### Upgrading from 0.1.0 to 0.2.0
 

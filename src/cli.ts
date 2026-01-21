@@ -8,13 +8,14 @@ import { dataCommands } from "./commands/data";
 import chalk from "chalk";
 import { qrCommands } from "./commands/qrcodes/generator";
 import { timeCommands } from "./commands/time/time";
+import { sslCommands } from "./commands/crypto/ssl";
 
 const program = new Command();
 
 program
   .name("sarra")
   .description("Daily developer ability enhancement tools")
-  .version("0.2.0", "-v, --version", "Display the current version")
+  .version("0.3.0", "-v, --version", "Display the current version")
   .showHelpAfterError()
   .helpOption("-h, --help", "Display help for command");
 
@@ -29,6 +30,7 @@ ${chalk.bold.cyan("COMMAND GROUPS")}
   ${chalk.green("data")}      Data encoding and formatting
   ${chalk.green("time")}      Date and time utilities
   ${chalk.green("qr")}        QR code generation
+  ${chalk.green("ssl")}       SSL certificate generation
 
 ${chalk.bold.cyan("EXAMPLES")}
 
@@ -38,6 +40,8 @@ ${chalk.bold.cyan("EXAMPLES")}
   ${chalk.green("sarra data json-pretty file.json")}
   ${chalk.green("sarra crypto hash 'my secret'")}
   ${chalk.green("sarra qr generate 'Hello World'")}
+  ${chalk.green("sarra crypto ssl generate --domain example.com --validity 90")}
+  ${chalk.green("sarra crypto ssl generate --domain myapp.local")}
 
 ${chalk.bold.cyan("TIPS")}
 
@@ -52,4 +56,5 @@ program.addCommand(cryptoCommands);
 program.addCommand(dataCommands);
 program.addCommand(timeCommands);
 program.addCommand(qrCommands);
+program.addCommand(sslCommands);
 program.parse();

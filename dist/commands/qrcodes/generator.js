@@ -46,7 +46,7 @@ const qr_help_1 = require("./qr-help");
 const prompt_user_1 = require("../../prompts/prompt-user");
 const path_1 = __importDefault(require("path"));
 const prettyHelp_1 = require("../../help/prettyHelp");
-const helpPath = path_1.default.resolve(__dirname, "help.md");
+const helpPath = path_1.default.resolve(__dirname, "../../docs/qr-help.md");
 let helpText = "";
 try {
     helpText = fs.readFileSync(helpPath, "utf8");

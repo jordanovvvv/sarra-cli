@@ -1,6 +1,6 @@
 # Sarra CLI
 
-Daily developer enhancement tools - A collection of CLI utilities for common development tasks including ID generation, cryptography, data formatting, QR code generation, and time utilities.
+Daily developer enhancement tools - A collection of CLI utilities for common development tasks including ID generation, cryptography, data formatting, QR code generation, time utilities, and SSL certificate management.
 
 ## Installation
 
@@ -31,15 +31,19 @@ sarra qr generate "Hello World"
 
 # Get current timestamp
 sarra time now
+
+# Generate SSL certificate for local development
+sarra ssl generate
 ```
 
 ## Command Groups
 
 - **[`id`](#id---identifiers-tokens-and-uuids)** - Identifiers, tokens, UUIDs ([detailed docs](./docs/id-help.md))
 - **[`crypto`](#crypto---cryptography-utilities)** - Cryptography utilities ([detailed docs](./docs/crypto-help.md))
-- **[`data`](#data---data-encoding-and-formatting)** - Data encoding and formatting ([detailed docs](./docs/data=help.md))
+- **[`data`](#data---data-encoding-and-formatting)** - Data encoding and formatting ([detailed docs](./docs/data-help.md))
 - **[`qr`](#qr---qr-code-generation)** - QR code generation ([detailed docs](./docs/qr-help.md))
-- **[`time`](#time---date-and-time-utilities)** - Date and time utilities ([detailed docs](./docs/time=help.md))
+- **[`time`](#time---date-and-time-utilities)** - Date and time utilities ([detailed docs](./docs/time-help.md))
+- **[`ssl`](#ssl---ssl-certificate-generation)** - SSL certificate generation ([detailed docs](./docs/ssl-help.md))
 
 Use `--help` on any command for more details:
 
@@ -48,11 +52,12 @@ sarra --help
 sarra id --help
 sarra crypto --help
 sarra qr --help
+sarra ssl --help
 ```
 
 ---
 
-## `id` - Identifiers, Tokens, and UUUIDs
+## `id` - Identifiers, Tokens, and UUIDs
 
 Generate and manage identifiers, tokens, and unique values commonly used in databases, APIs, authentication, and distributed systems.
 
@@ -290,6 +295,109 @@ echo "Started at $(sarra time now)"
 
 ---
 
+## `ssl` - SSL Certificate Generation
+
+SSL/TLS certificate generation for local development and production environments. Generate self-signed certificates instantly or obtain trusted certificates from Let's Encrypt.
+
+📚 **[View detailed documentation](./docs/ssl-help.md)**
+
+### Commands
+
+- `generate` - Generate self-signed SSL certificates for local development
+- `letsencrypt` - Obtain trusted SSL certificates from Let's Encrypt for production
+
+### Quick Examples
+
+```bash
+# Generate self-signed certificate for localhost
+sarra ssl generate
+
+# Generate for custom local domain
+sarra ssl generate --domain myapp.local
+
+# Generate with custom validity period
+sarra ssl generate --domain dev.example.com --validity 90
+
+# Get Let's Encrypt certificate (standalone mode)
+sarra ssl letsencrypt -d example.com -e admin@example.com --standalone
+
+# Get Let's Encrypt certificate (with existing web server)
+sarra ssl letsencrypt -d example.com -e admin@example.com --webroot /var/www/html
+
+# Test Let's Encrypt setup first
+sarra ssl letsencrypt -d example.com -e admin@example.com --standalone --staging
+```
+
+### When to Use Each Command
+
+**`ssl generate` - Self-Signed Certificates**
+
+- ✅ Local development (`https://localhost`)
+- ✅ Internal testing environments
+- ✅ Development teams (share certificate)
+- ❌ NOT for production websites
+- ❌ NOT for public applications
+
+**`ssl letsencrypt` - Let's Encrypt Certificates**
+
+- ✅ Production websites
+- ✅ Public-facing applications
+- ✅ Any service requiring browser trust
+- ❌ NOT for localhost development
+- ❌ NOT for offline environments
+
+### Certificate Specifications (Self-Signed)
+
+- **Key Algorithm:** RSA 2048-bit
+- **Signature Algorithm:** SHA-256
+- **Validity:** Up to 365 days
+- **Output:** `.crt` and `.key` files in PEM format
+
+### Prerequisites for Let's Encrypt
+
+1. **Certbot installed:**
+
+   - macOS: `brew install certbot`
+   - Ubuntu: `sudo apt install certbot`
+   - Windows: Download from https://certbot.eff.org
+
+2. **Domain ownership:**
+
+   - Real domain (not `localhost` or `.local`)
+   - DNS points to your server's IP
+   - Verify: `dig +short example.com`
+
+3. **Network access:**
+   - Port 80 open and accessible
+   - Firewall allows incoming connections
+
+### Making Self-Signed Certificates Trusted
+
+To eliminate browser warnings during local development:
+
+**macOS:**
+
+```bash
+sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ./certs/localhost.crt
+```
+
+**Windows (as Administrator):**
+
+```bash
+certutil -addstore -f "ROOT" ./certs/localhost.crt
+```
+
+**Linux:**
+
+```bash
+sudo cp ./certs/localhost.crt /usr/local/share/ca-certificates/
+sudo update-ca-certificates
+```
+
+> **Note:** This only trusts the certificate on your machine. Other users will still see warnings.
+
+---
+
 ## Interactive Mode
 
 Most commands support an interactive mode that prompts you before saving files:
@@ -357,6 +465,7 @@ sarra data json validate data.json && sarra data json query "users" data.json
 sarra id uuid --count 100 -o uuids.txt
 sarra crypto hash sha256 "data" -o hash.txt
 sarra qr generate "https://example.com" -o qr.png
+sarra ssl generate --domain myapp.local
 
 # Nested directories (auto-created)
 sarra id random --length 32 -o ./secrets/tokens/api-key.txt
@@ -386,6 +495,7 @@ sarra crypto --format json base64 "data" -o encoded.json
 - Directories are **automatically created** when using `-o/--out`
 - Use **`-y`** flag to skip interactive prompts and output to stdout
 - Use **`-o`** flag to save directly to a file without prompts
+- SSL certificates are **zero-dependency** - no OpenSSL installation required
 
 ---
 
@@ -398,6 +508,7 @@ Detailed documentation for each command group:
 - [Data Commands (JSON utilities)](./docs/data-help.md)
 - [QR Code Commands](./docs/qr-help.md)
 - [Time Commands](./docs/time-help.md)
+- [SSL Commands (Certificate Generation)](./docs/ssl-help.md)
 
 ---
 
@@ -414,6 +525,9 @@ echo "mypassword" | sarra crypto hash sha256
 
 # Format API response
 curl https://api.example.com/users | sarra data json format
+
+# Setup local HTTPS development
+sarra ssl generate --domain localhost
 ```
 
 ### Configuration
@@ -452,6 +566,108 @@ sarra data json query "users" data.json | sarra data json to-csv -o users.csv
 sarra data json format raw.json | sarra data json validate
 ```
 
+### SSL/TLS Setup
+
+```bash
+# Local development environment
+sarra ssl generate --domain localhost
+sarra ssl generate --domain myapp.local --validity 180
+
+# Production website deployment
+sarra ssl letsencrypt -d example.com -e admin@example.com --standalone
+
+# Multiple environments
+sarra ssl generate --domain dev.myapp.local
+sarra ssl generate --domain staging.myapp.local
+sarra ssl letsencrypt -d myapp.com -e ops@myapp.com --webroot /var/www/html
+```
+
+### DevOps & CI/CD
+
+```bash
+# Generate unique deployment IDs
+sarra id uuid --uuid-version v7 -y
+
+# Hash artifact checksums
+cat build.zip | sarra crypto hash sha256 -o checksum.txt
+
+# Validate configuration files
+sarra data json validate config.json && deploy.sh
+
+# Generate QR codes for mobile app testing
+sarra qr url "https://testflight.apple.com/join/abc123" -o testflight.png
+
+# Timestamp build logs
+echo "Build started: $(sarra time now)" >> build.log
+```
+
+---
+
+## Security Notes
+
+### Self-Signed Certificates
+
+- ⚠️ **Only for development** - browsers will show warnings
+- ⚠️ **Not trusted by default** - requires manual installation
+- ⚠️ **Never use in production** - visitors will see security errors
+
+### Let's Encrypt Certificates
+
+- ✅ **Automatically trusted** by all browsers and devices
+- ✅ **Free and automated** - renews every 90 days
+- ✅ **Production-ready** - industry-standard security
+- ⚠️ **Requires domain ownership** - cannot be used for localhost
+- ⚠️ **Rate limited** - 50 certificates per domain per week
+
+### Best Practices
+
+1. Use `ssl generate` for local development
+2. Test Let's Encrypt with `--staging` flag first
+3. Never commit `.key` files to version control
+4. Rotate certificates regularly
+5. Keep certbot updated for security patches
+
+---
+
+## Troubleshooting
+
+### SSL Certificate Issues
+
+**"Certbot not found"**
+
+- Install certbot: `brew install certbot` (macOS) or `sudo apt install certbot` (Linux)
+
+**"Let's Encrypt doesn't work with localhost"**
+
+- Use `sarra ssl generate` for local development instead
+
+**"Domain must point to this server's IP"**
+
+- Verify DNS: `dig +short example.com` should show your server's IP
+
+**"Port 80 must be accessible"**
+
+- Check firewall rules: `sudo ufw status`
+- Ensure no other service is using port 80
+
+### Other Common Issues
+
+**"Command not found"**
+
+- Reinstall globally: `npm install -g sarra`
+- Check PATH: `echo $PATH`
+
+**"Permission denied" when saving files**
+
+- Use `sudo` for system directories
+- Save to user-writable locations instead
+
+**JSON validation fails**
+
+- Check for trailing commas
+- Verify quote types (must use double quotes)
+- Use `sarra data json format` to auto-fix formatting
+
 ---
 
 ## License
@@ -465,3 +681,20 @@ See [CHANGELOG](CHANGELOG.md) for version history and updates.
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.
+
+---
+
+## Roadmap
+
+Planned features for future releases:
+
+- 🔐 Additional cryptographic algorithms (AES, RSA)
+- 📊 More data format conversions (YAML, TOML, XML)
+- 🌐 DNS utilities and domain validation
+- 🔑 SSH key generation and management
+- 📦 Archive utilities (zip, tar)
+- 🎨 Image processing and optimization
+- 🔍 File search and text processing
+- 🌍 Geolocation and IP utilities
+
+---

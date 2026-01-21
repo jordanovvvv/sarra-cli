@@ -4,6 +4,7 @@ import path from "path";
 import { hashCommand } from "./hash";
 import { base64Command } from "./base64";
 import { prettyHelp } from "../../help/prettyHelp";
+import { sslCommands } from "./ssl";
 
 const helpPath = path.resolve(__dirname, "../../docs/crypto-help.md");
 
@@ -21,4 +22,5 @@ export const cryptoCommands = new Command("crypto")
     this.outputHelp();
   })
   .addCommand(hashCommand)
-  .addCommand(base64Command);
+  .addCommand(base64Command)
+  .addCommand(sslCommands);
