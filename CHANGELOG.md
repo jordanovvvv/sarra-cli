@@ -252,6 +252,58 @@ sarra crypto hash sha1 "data"
 sarra crypto hash sha512 "data"
 ```
 
+**More Time Commands:**
+
+```bash
+# Now available
+sarra time now
+sarra time now --unix
+sarra time now --ms
+sarra time now --format date
+sarra time now --format time
+sarra time now --format locale
+
+convert (conv) — Timestamp conversion
+
+Automatically detect and convert between ISO, Unix (seconds/ms), date-only, and locale formats.
+
+sarra time convert 1737468322
+sarra time convert "2026-01-21T13:45:22.123Z" --to unix
+sarra time conv 1737468322 --to locale
+
+add — Time arithmetic
+
+Add or subtract time units from the current timestamp or a provided value.
+
+sarra time add --days 5
+sarra time add "2026-01-21T10:00:00Z" --hours 2
+sarra time add --days 1 --hours 3 --minutes 30
+sarra time add --days -3 --hours -2
+
+
+Supports output formatting:
+
+sarra time add --days 7 --format unix
+
+diff — Time difference calculation
+
+Calculate duration between two timestamps, or from a timestamp to now.
+
+sarra time diff "2026-01-21T00:00:00Z" "2026-02-01T00:00:00Z" --unit days
+sarra time diff 1737468322 1737554722
+sarra time diff "2026-01-21T10:00:00Z" --unit hours
+sarra time diff "2026-01-21T10:00:00Z" "2026-01-20T10:00:00Z" --abs
+
+parse — Validation and inspection
+
+Validate timestamps and inspect parsed values.
+
+sarra time parse "2026-01-21T13:45:22.123Z"
+sarra time parse 1737468322
+sarra time parse "2026-01-21T13:45:22.123Z" --verbose
+sarra time parse "2026-01-21"
+```
+
 </details>
 
 ---

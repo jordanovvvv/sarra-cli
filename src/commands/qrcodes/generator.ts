@@ -8,7 +8,7 @@ import { getSaveLocation } from "../../prompts/prompt-user";
 import path from "path";
 import { prettyHelp } from "../../help/prettyHelp";
 
-const helpPath = path.resolve(__dirname, "help.md");
+const helpPath = path.resolve(__dirname, "../../docs/qr-help.md");
 
 let helpText = "";
 try {

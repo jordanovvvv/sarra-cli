@@ -35,11 +35,11 @@ sarra time now
 
 ## Command Groups
 
-- **[`id`](#id---identifiers-tokens-and-uuids)** - Identifiers, tokens, UUIDs ([detailed docs](./docs/id.md))
-- **[`crypto`](#crypto---cryptography-utilities)** - Cryptography utilities ([detailed docs](./docs/crypto.md))
-- **[`data`](#data---data-encoding-and-formatting)** - Data encoding and formatting ([detailed docs](./docs/data.md))
-- **[`qr`](#qr---qr-code-generation)** - QR code generation ([detailed docs](./docs/qr.md))
-- **[`time`](#time---date-and-time-utilities)** - Date and time utilities ([detailed docs](./docs/time.md))
+- **[`id`](#id---identifiers-tokens-and-uuids)** - Identifiers, tokens, UUIDs ([detailed docs](./docs/id-help.md))
+- **[`crypto`](#crypto---cryptography-utilities)** - Cryptography utilities ([detailed docs](./docs/crypto-help.md))
+- **[`data`](#data---data-encoding-and-formatting)** - Data encoding and formatting ([detailed docs](./docs/data=help.md))
+- **[`qr`](#qr---qr-code-generation)** - QR code generation ([detailed docs](./docs/qr-help.md))
+- **[`time`](#time---date-and-time-utilities)** - Date and time utilities ([detailed docs](./docs/time=help.md))
 
 Use `--help` on any command for more details:
 
@@ -56,7 +56,7 @@ sarra qr --help
 
 Generate and manage identifiers, tokens, and unique values commonly used in databases, APIs, authentication, and distributed systems.
 
-📚 **[View detailed documentation](./docs/id.md)**
+📚 **[View detailed documentation](./docs/id-help.md)**
 
 ### Commands
 
@@ -107,7 +107,7 @@ Save to file? (Y/n/path):
 
 Cryptographic utilities for hashing and encoding.
 
-📚 **[View detailed documentation](./docs/crypto.md)**
+📚 **[View detailed documentation](./docs/crypto-help.md)**
 
 ### Commands
 
@@ -149,7 +149,7 @@ sarra crypto --format json hash sha256 "data" -o hash.json
 
 JSON utilities for formatting, validating, querying, and transforming JSON data.
 
-📚 **[View detailed documentation](./docs/data.md)**
+📚 **[View detailed documentation](./docs/data-help.md)**
 
 ### Commands
 
@@ -195,7 +195,7 @@ curl https://api.example.com/data | sarra data json format
 
 QR code generation utilities for creating scannable codes from text, URLs, and files.
 
-📚 **[View detailed documentation](./docs/qr.md)**
+📚 **[View detailed documentation](./docs/qr-help.md)**
 
 ### Commands
 
@@ -252,7 +252,7 @@ sarra qr generate "Important" -e H -o code.png
 
 Date and time utilities for scripting, logging, and debugging.
 
-📚 **[View detailed documentation](./docs/time.md)**
+📚 **[View detailed documentation](./docs/time-help.md)**
 
 ### Commands
 
@@ -393,11 +393,11 @@ sarra crypto --format json base64 "data" -o encoded.json
 
 Detailed documentation for each command group:
 
-- [ID Commands (UUID, Random Tokens)](./docs/id.md)
-- [Crypto Commands (Hash, Base64)](./docs/crypto.md)
-- [Data Commands (JSON utilities)](./docs/data.md)
-- [QR Code Commands](./docs/qr.md)
-- [Time Commands](./docs/time.md)
+- [ID Commands (UUID, Random Tokens)](./docs/id-help.md)
+- [Crypto Commands (Hash, Base64)](./docs/crypto-help.md)
+- [Data Commands (JSON utilities)](./docs/data-help.md)
+- [QR Code Commands](./docs/qr-help.md)
+- [Time Commands](./docs/time-help.md)
 
 ---
 

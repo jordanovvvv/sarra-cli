@@ -5,7 +5,7 @@ import { hashCommand } from "./hash";
 import { base64Command } from "./base64";
 import { prettyHelp } from "../../help/prettyHelp";
 
-const helpPath = path.resolve(__dirname, "help.md");
+const helpPath = path.resolve(__dirname, "../../docs/crypto-help.md");
 
 let helpText = "";
 try {

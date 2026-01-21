@@ -5,9 +5,9 @@ import { Command } from "commander";
 import { idCommands } from "./commands/id";
 import { cryptoCommands } from "./commands/crypto";
 import { dataCommands } from "./commands/data";
-import { timeCommands } from "./commands/time";
 import chalk from "chalk";
 import { qrCommands } from "./commands/qrcodes/generator";
+import { timeCommands } from "./commands/time/time";
 
 const program = new Command();
 
