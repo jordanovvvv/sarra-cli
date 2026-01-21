@@ -46,21 +46,49 @@ Output formats
 
 Writing output to files
 
-    # Write UUIDs to a text file
-    sarra id uuid --count 3 --out uuids.txt
+    # Interactive prompt (default behavior)
+    sarra id uuid --count 3
+    sarra id random --length 32 --count 5
 
-    # Write UUIDs to a JSON file
+    # Skip prompt and output to stdout
+    sarra id uuid --count 3 -y
+    sarra id random --length 32 -y
+
+    # Write directly to file (skips prompt)
+    sarra id uuid --count 3 --out uuids.txt
     sarra id --format json uuid --uuid-version v7 --out uuids.json
 
-    # Write tokens to a JSON file
-    sarra id random --length 32 --count 5 --format json --out tokens.json
+    # Custom paths with nested directories (auto-created)
+    sarra id uuid --out ./output/data/uuids.txt
+    sarra id random --length 32 --count 5 -o ./tokens/secure.json
+
+INTERACTIVE MODE
+
+By default, commands will prompt you before saving to a file:
+
+    📁 Save Location
+       Current directory: /home/user/projects
+       Default file: uuids.txt
+       Full path: /home/user/projects/uuids.txt
+
+    Save to file? (Y/n/path):
+
+Options:
+• Press Enter or type 'y' → Save to default location
+• Type 'n' → Output to stdout (terminal)
+• Type a path → Save to custom location
+
+Skip the prompt:
+• Use -y flag to output directly to stdout
+• Use -o/--out flag to save directly to a file
 
 NOTES
 
-- Global options must appear BEFORE the subcommand.
-- Subcommands may define additional options (e.g. --count, --out).
-- If --out is omitted, output is written to stdout.
-- UUID v7 is recommended for databases and ordered indexes.
+• Global options must appear BEFORE the subcommand
+• Subcommands may define additional options (e.g. --count, --out)
+• Without -o or -y flags, you'll be prompted for save location
+• Directories are created automatically when using -o/--out
+• UUID v7 is recommended for databases and ordered indexes
 
 UUID VERSIONS
 v4 Random (default)
