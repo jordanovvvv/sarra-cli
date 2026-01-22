@@ -11,7 +11,7 @@ const data_1 = require("./commands/data");
 const chalk_1 = __importDefault(require("chalk"));
 const generator_1 = require("./commands/qrcodes/generator");
 const time_1 = require("./commands/time/time");
-const ssl_1 = require("./commands/crypto/ssl");
+const ssl_1 = require("./commands/ssl/ssl");
 const program = new commander_1.Command();
 program
     .name("sarra")

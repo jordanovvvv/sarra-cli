@@ -8,14 +8,14 @@ import { dataCommands } from "./commands/data";
 import chalk from "chalk";
 import { qrCommands } from "./commands/qrcodes/generator";
 import { timeCommands } from "./commands/time/time";
-import { sslCommands } from "./commands/crypto/ssl";
+import { sslCommands } from "./commands/ssl/ssl";
 
 const program = new Command();
 
 program
   .name("sarra")
   .description("Daily developer ability enhancement tools")
-  .version("0.3.0", "-v, --version", "Display the current version")
+  .version("0.3.1", "-v, --version", "Display the current version")
   .showHelpAfterError()
   .helpOption("-h, --help", "Display help for command");
 

@@ -6,14 +6,26 @@ import { getSaveLocation } from "../../prompts/prompt-user";
 import { promisify } from "util";
 import { exec, spawn } from "child_process";
 import { readmeTemplate } from "./generate-ssl-readme";
+import path from "path";
+import { prettyHelp } from "../../help/prettyHelp";
 
 const execAsync = promisify(exec);
+
+const helpPath = path.resolve(__dirname, "../../docs/ssl-help.md");
+
+let helpText = "";
+try {
+  helpText = fs.readFileSync(helpPath, "utf8");
+} catch {
+  helpText = "";
+}
 
 export const sslCommands = new Command("ssl");
 
 sslCommands
   .command("generate")
-  .description("Generate a self-signed SSL certificate")
+  .description("Generate a SSL certificate")
+  .addHelpText("after", `\n${prettyHelp(helpText)}`)
   .option("-d, --domain <domain>", "Domain name", "localhost")
   .option(
     "--val, --validity <days>",

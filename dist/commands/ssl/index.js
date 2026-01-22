@@ -7,10 +7,9 @@ exports.cryptoCommands = void 0;
 const commander_1 = require("commander");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const hash_1 = require("./hash");
-const base64_1 = require("./base64");
 const prettyHelp_1 = require("../../help/prettyHelp");
-const helpPath = path_1.default.resolve(__dirname, "../../docs/crypto-help.md");
+const ssl_1 = require("../ssl/ssl");
+const helpPath = path_1.default.resolve(__dirname, "../../docs/ssl-help.md");
 let helpText = "";
 try {
     helpText = fs_1.default.readFileSync(helpPath, "utf8");
@@ -18,11 +17,10 @@ try {
 catch {
     helpText = "";
 }
-exports.cryptoCommands = new commander_1.Command("crypto")
-    .description("Cryptographic utilities")
+exports.cryptoCommands = new commander_1.Command("ssl")
+    .description("SSL certificate utilities")
     .addHelpText("after", `\n${(0, prettyHelp_1.prettyHelp)(helpText)}`)
     .action(function () {
     this.outputHelp();
 })
-    .addCommand(hash_1.hashCommand)
-    .addCommand(base64_1.base64Command);
+    .addCommand(ssl_1.sslCommands);

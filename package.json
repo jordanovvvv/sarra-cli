@@ -1,6 +1,6 @@
 {
   "name": "sarra",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Daily developer enhancement tools",
   "type": "commonjs",
   "bin": {
@@ -8,6 +8,7 @@
   },
   "files": [
     "dist",
+    "docs",
     "LICENSE"
   ],
   "license": "MIT",
