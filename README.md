@@ -14,6 +14,10 @@ Or use directly with npx:
 npx sarra <command>
 ```
 
+## Demo
+
+![Sarra CLI Demo](demo.gif)
+
 ## Quick Start
 
 ```bash
