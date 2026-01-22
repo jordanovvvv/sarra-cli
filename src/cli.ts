@@ -15,7 +15,7 @@ const program = new Command();
 program
   .name("sarra")
   .description("Daily developer ability enhancement tools")
-  .version("0.3.2", "-v, --version", "Display the current version")
+  .version("0.3.3", "-v, --version", "Display the current version")
   .showHelpAfterError()
   .helpOption("-h, --help", "Display help for command");
 
