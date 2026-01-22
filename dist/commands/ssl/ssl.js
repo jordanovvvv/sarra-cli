@@ -15,7 +15,7 @@ const generate_ssl_readme_1 = require("./generate-ssl-readme");
 const path_1 = __importDefault(require("path"));
 const prettyHelp_1 = require("../../help/prettyHelp");
 const execAsync = (0, util_1.promisify)(child_process_1.exec);
-const helpPath = path_1.default.join(process.cwd(), "docs", "ssl-help.md");
+const helpPath = path_1.default.resolve(__dirname, "../../docs/ssl-help.md");
 let helpText = "";
 try {
     helpText = fs_1.default.readFileSync(helpPath, "utf8");
@@ -23,15 +23,10 @@ try {
 catch {
     helpText = "";
 }
-exports.sslCommands = new commander_1.Command("ssl")
-    .description("SSL/TLS certificate generation")
-    .addHelpText("after", `\n${(0, prettyHelp_1.prettyHelp)(helpText)}`)
-    .action(function () {
-    this.outputHelp();
-});
+exports.sslCommands = new commander_1.Command("ssl");
 exports.sslCommands
     .command("generate")
-    .description("Generate a self-signed SSL certificate")
+    .description("Generate a SSL certificate")
     .addHelpText("after", `\n${(0, prettyHelp_1.prettyHelp)(helpText)}`)
     .option("-d, --domain <domain>", "Domain name", "localhost")
     .option("--val, --validity <days>", "Validity period (max 365)", (val) => {

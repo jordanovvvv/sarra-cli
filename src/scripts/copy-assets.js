@@ -1,26 +1,27 @@
 const fs = require("fs");
 const path = require("path");
 
-// copy help instructions for 'id' command
-const fromId = path.resolve("src/commands/id/help.md");
-const toId = path.resolve("dist/commands/id/help.md");
-fs.mkdirSync(path.dirname(toId), { recursive: true });
-fs.copyFileSync(fromId, toId);
+const DOCS = [
+  "id-help.md",
+  "crypto-help.md",
+  "data-help.md",
+  "qrcode-help.md",
+  "ssl-help.md",
+  "time-help.md",
+];
 
-// copy help instructions for 'crypto' command
-const fromCrypto = path.resolve("src/commands/crypto/help.md");
-const toCrypto = path.resolve("dist/commands/crypto/help.md");
-fs.mkdirSync(path.dirname(toCrypto), { recursive: true });
-fs.copyFileSync(fromCrypto, toCrypto);
+for (const file of DOCS) {
+  const from = path.resolve("docs", file);
+  const to = path.resolve("dist", "docs", file);
 
-// copy help instructions for 'data' command
-const fromData = path.resolve("src/commands/data/help.md");
-const toData = path.resolve("dist/commands/data/help.md");
-fs.mkdirSync(path.dirname(toData), { recursive: true });
-fs.copyFileSync(fromData, toData);
+  if (!fs.existsSync(from)) {
+    console.warn(`⚠️ Missing doc: ${from}`);
+    continue;
+  }
 
-// copy help instructions for 'time' command
-const fromTime = path.resolve("src/commands/time/help.md");
-const toTime = path.resolve("dist/commands/time/help.md");
-fs.mkdirSync(path.dirname(toTime), { recursive: true });
-fs.copyFileSync(fromTime, toTime);
+  fs.mkdirSync(path.dirname(to), { recursive: true });
+  fs.copyFileSync(from, to);
+
+  console.log(`✔ Copied ${file}`);
+}
+console.log("✅ All docs copied successfully.");
