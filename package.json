@@ -6,6 +6,10 @@
   "bin": {
     "sarra": "dist/cli.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jordanovvvv/sarra-cli"
+  },
   "files": [
     "dist",
     "docs",

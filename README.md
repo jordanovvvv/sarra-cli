@@ -61,7 +61,7 @@ sarra ssl --help
 
 Generate and manage identifiers, tokens, and unique values commonly used in databases, APIs, authentication, and distributed systems.
 
-📚 **[View detailed documentation](./docs/id-help.md)**
+📚 **[View detailed documentation](https://github.com/jordanovvvv/sarra-cli/docs/id-help.md)**
 
 ### Commands
 
@@ -112,7 +112,7 @@ Save to file? (Y/n/path):
 
 Cryptographic utilities for hashing and encoding.
 
-📚 **[View detailed documentation](./docs/crypto-help.md)**
+📚 **[View detailed documentation](https://github.com/jordanovvvv/sarra-cli/docs/crypto-help.md)**
 
 ### Commands
 
@@ -154,7 +154,7 @@ sarra crypto --format json hash sha256 "data" -o hash.json
 
 JSON utilities for formatting, validating, querying, and transforming JSON data.
 
-📚 **[View detailed documentation](./docs/data-help.md)**
+📚 **[View detailed documentation](https://github.com/jordanovvvv/sarra-cli/docs/data-help.md)**
 
 ### Commands
 
@@ -200,7 +200,7 @@ curl https://api.example.com/data | sarra data json format
 
 QR code generation utilities for creating scannable codes from text, URLs, and files.
 
-📚 **[View detailed documentation](./docs/qr-help.md)**
+📚 **[View detailed documentation](https://github.com/jordanovvvv/sarra-cli/docs/qrcode-help.md)**
 
 ### Commands
 
@@ -257,7 +257,7 @@ sarra qr generate "Important" -e H -o code.png
 
 Date and time utilities for scripting, logging, and debugging.
 
-📚 **[View detailed documentation](./docs/time-help.md)**
+📚 **[View detailed documentation](https://github.com/jordanovvvv/sarra-cli/docs/time-help.md)**
 
 ### Commands
 
@@ -299,7 +299,7 @@ echo "Started at $(sarra time now)"
 
 SSL/TLS certificate generation for local development and production environments. Generate self-signed certificates instantly or obtain trusted certificates from Let's Encrypt.
 
-📚 **[View detailed documentation](./docs/ssl-help.md)**
+📚 **[View detailed documentation](https://github.com/jordanovvvv/sarra-cli/docs/ssl-help.md)**
 
 ### Commands
 
