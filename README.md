@@ -836,7 +836,6 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 Planned features for future releases:
 
-- 🔐 Additional cryptographic algorithms (AES, RSA)
 - 📊 More data format conversions (YAML, TOML, XML)
 - 🌐 DNS utilities and domain validation
 - 🔑 SSH key generation and management

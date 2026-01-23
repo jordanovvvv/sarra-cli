@@ -6,148 +6,94 @@ Output demo.mp4
 Set FontSize 16
 Set Width 1400
 Set Height 800
-Set TypingSpeed 50ms
+Set TypingSpeed 30ms
 Set Theme "Dracula"
-# Fix: Ensure PowerShell starts cleanly without the copyright banner
 Set Shell "powershell"
 
 # ----------------------------------------
-# Pretty Header
+# Header
 # ----------------------------------------
-Sleep 500ms
-Type "################################################"
+Sleep 300ms
+Type "# 🚀 SARRA CLI - Fast Developer Tools"
 Enter
-Type "#                                              #"
-Enter
-Type "#   🚀  SARRA CLI: Daily Developer Tools       #"
-Enter
-Type "#       Fast. Zero-Config. Powerful.           #"
-Enter
-Type "#                                              #"
-Enter
-Type "################################################"
-Enter
-Sleep 1.5s
-Type "clear"
-Enter
-Sleep 500ms
-
-# ----------------------------------------
-# Startup & Version
-# ----------------------------------------
-Type "# Checking installation..."
-Enter
-Sleep 500ms
-Type "sarra --version"
-Enter
-Sleep 1.5s
+Sleep 800ms
 Type "clear"
 Enter
 
 # ----------------------------------------
 # 1. ID Generation
 # ----------------------------------------
-Type "# 1. ID Generation (UUID v4, v7, and Secure Tokens)"
+Type "# Generate UUIDs"
 Enter
-Type "sarra id uuid --count 3"
+Type "sarra id uuid --count 2"
 Enter
-Sleep 2s
+Sleep 1.5s
 
 Type ""
-Enter
-Type "# UUID v7 (Time-ordered for databases)"
-Enter
-Type "sarra id uuid --uuid-version v7 --count 2"
-Enter
-Sleep 2s
-
-Type ""
-Enter
-Type "# Generate a 32-character secure random token"
 Enter
 Type "sarra id random --length 32"
 Enter
-Sleep 2s
+Sleep 1.5s
 Type "clear"
 Enter
 
 # ----------------------------------------
 # 2. Cryptography
 # ----------------------------------------
-Type "# 2. Cryptography & Encoding"
+Type "# Hash & Encrypt"
 Enter
-Type "echo 'hello world' | sarra crypto hash sha256"
+Type "sarra crypto hash sha256 'hello world'"
+Enter
+Sleep 1.5s
+
+Type ""
+Enter
+Type "sarra crypto aes-encrypt 'secret message' -y"
 Enter
 Sleep 2s
 
 Type ""
 Enter
-Type "# Quickly Base64 encode a string"
+Type "sarra crypto base64 'encode this'"
 Enter
-Type "sarra crypto base64 'secret data'"
-Enter
-Sleep 2s
-
-Type ""
-Enter
-Type "# Decode it back"
-Enter
-Type "sarra crypto base64 --decode 'c2VjcmV0IGRhdGE='"
-Enter
-Sleep 2s
+Sleep 1.5s
 Type "clear"
 Enter
 
 # ----------------------------------------
-# 3. JSON Processing
+# 3. JSON
 # ----------------------------------------
-Type "# 3. JSON Utilities"
+Type "# JSON utilities"
 Enter
-Type `echo '{"name": "John", "age": 30, "city": "NYC"}' > data.json`
+Type `echo '{"name":"John","age":30}' > data.json`
 Enter
-Sleep 1s
+Sleep 800ms
 
-Type ""
-Enter
-Type "# Pretty-print JSON files"
-Enter
 Type "sarra data json data.json"
 Enter
-Sleep 2s
+Sleep 1.5s
 
-Type ""
-Enter
-Type "# Extract specific fields"
-Enter
 Type "sarra data json query name data.json"
 Enter
-Sleep 2s
+Sleep 1.5s
 Type "clear"
 Enter
 
 # ----------------------------------------
 # 4. QR Codes
 # ----------------------------------------
-Type "# 4. QR Codes (Generate images or terminal previews)"
+Type "# QR code in terminal"
 Enter
-Type "sarra qr generate 'https://github.com/jordanovvvv/sarra-cli' -t"
-Enter
-Sleep 4s
-
-Type ""
-Enter
-Type "# Instant ASCII preview in terminal"
-Enter
-Type "sarra qr terminal 'Hello Sarra!'"
+Type "sarra qr terminal 'https://github.com/jordanovvvv/sarra-cli'"
 Enter
 Sleep 3s
 Type "clear"
 Enter
 
 # ----------------------------------------
-# 5. Time Utilities
+# 5. Time & SSL
 # ----------------------------------------
-Type "# 5. Time Utilities"
+Type "# Quick utilities"
 Enter
 Type "sarra time now"
 Enter
@@ -155,40 +101,17 @@ Sleep 1s
 
 Type ""
 Enter
-Type "sarra time now --unix"
-Enter
-Sleep 1s
-Type "clear"
-Enter
-
-# ----------------------------------------
-# 6. SSL Certificates
-# ----------------------------------------
-Type "# 6. SSL Certificates (Local development made easy)"
-Enter
 Type "sarra ssl generate --domain localhost"
 Enter
-Sleep 4s
-
-Type ""
-Enter
-Type "ls localhost.*"
-Enter
-Sleep 2s
+Sleep 2.5s
 Type "clear"
 Enter
 
 # ----------------------------------------
 # Finale
 # ----------------------------------------
-Type "################################################"
+Type "# Install: npm install -g sarra"
 Enter
-Type "#  Sarra CLI is ready for your workflow.        #"
+Type "# Docs: github.com/jordanovvvv/sarra-cli"
 Enter
-Type "#  Install: npm install -g sarra               #"
-Enter
-Type "#  Docs: github.com/jordanovvvv/sarra-cli      #"
-Enter
-Type "################################################"
-Enter
-Sleep 5s
+Sleep 3s
