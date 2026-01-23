@@ -1,6 +1,6 @@
 {
   "name": "sarra",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Daily developer enhancement tools",
   "type": "commonjs",
   "bin": {
