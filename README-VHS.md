@@ -7,12 +7,14 @@ docker run --rm -v $PWD:/vhs ghcr.io/charmbracelet/vhs sarra-cli-demo.tape
 ```
 
 This will generate:
+
 - `demo.gif` - Animated GIF for your README
 - `demo.mp4` - High-quality video
 
 ## Step-by-Step Instructions
 
 ### 1. Save the tape file
+
 Save the `sarra-cli-demo.tape` artifact in your project directory.
 
 ### 2. Run VHS with Docker
@@ -23,7 +25,9 @@ docker run --rm -v $PWD:/vhs ghcr.io/charmbracelet/vhs sarra-cli-demo.tape
 ```
 
 ### 3. Output files
+
 After the command completes (takes ~2-3 minutes), you'll find:
+
 - `demo.gif` - Ready to embed in README
 - `demo.mp4` - Higher quality alternative
 
@@ -48,6 +52,7 @@ Set Theme "Dracula"      # Color theme
 ```
 
 Popular themes:
+
 - `Dracula` (dark, purple/pink)
 - `Nord` (dark, blue/teal)
 - `Monokai` (dark, vibrant)
@@ -57,6 +62,7 @@ Popular themes:
 ## Embed in README
 
 ### GIF (Recommended for GitHub)
+
 ```markdown
 ## Demo
 
@@ -64,6 +70,7 @@ Popular themes:
 ```
 
 ### Video Link
+
 ```markdown
 ## Demo
 
@@ -71,17 +78,19 @@ Popular themes:
 ```
 
 ### Both
+
 ```markdown
 ## Demo
 
 ![Sarra CLI Demo](demo.gif)
 
-*[Watch full HD video (MP4)](demo.mp4)*
+_[Watch full HD video (MP4)](demo.mp4)_
 ```
 
 ## Troubleshooting
 
 ### Permission Issues (Linux/Mac)
+
 ```bash
 # Make sure the current directory is writable
 chmod 755 .
@@ -91,11 +100,13 @@ docker run --rm -v $PWD:/vhs -u $(id -u):$(id -g) ghcr.io/charmbracelet/vhs sarr
 ```
 
 ### Windows PowerShell
+
 ```powershell
 docker run --rm -v ${PWD}:/vhs ghcr.io/charmbracelet/vhs sarra-cli-demo.tape
 ```
 
 ### Windows CMD
+
 ```cmd
 docker run --rm -v %cd%:/vhs ghcr.io/charmbracelet/vhs sarra-cli-demo.tape
 ```
@@ -123,6 +134,10 @@ sudo mv vhs /usr/local/bin/
 # Then run directly
 vhs sarra-cli-demo.tape
 ```
+
+## Windows 11 Compatibility issues
+
+For some reason **ttyd** doesn't execute the terminal it needs to for **v1.7.7** in Windows 11, so downgrading to a stable **v1.7.3** works.
 
 ## Resources
 

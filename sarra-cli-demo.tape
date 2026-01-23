@@ -1,185 +1,172 @@
+# Output files
 Output demo.gif
 Output demo.mp4
 
+# Settings
 Set FontSize 16
 Set Width 1400
 Set Height 800
 Set TypingSpeed 50ms
 Set Theme "Dracula"
-# Using bash because the Docker container is Linux-based
-Set Shell bash
+# Fix: Ensure PowerShell starts cleanly without the copyright banner
+Set Shell "powershell"
 
 # ----------------------------------------
-# Startup
+# Pretty Header
 # ----------------------------------------
+Sleep 500ms
+Type "################################################"
+Enter
+Type "#                                              #"
+Enter
+Type "#   🚀  SARRA CLI: Daily Developer Tools       #"
+Enter
+Type "#       Fast. Zero-Config. Powerful.           #"
+Enter
+Type "#                                              #"
+Enter
+Type "################################################"
+Enter
+Sleep 1.5s
 Type "clear"
 Enter
 Sleep 500ms
 
-Type "# Sarra CLI Demo - Daily Developer Tools"
-Enter
-Sleep 1s
-Type "# Fast, zero-config utilities for developers"
-Enter
-Sleep 2s
-Type "clear"
+# ----------------------------------------
+# Startup & Version
+# ----------------------------------------
+Type "# Checking installation..."
 Enter
 Sleep 500ms
-
-# ----------------------------------------
-# Verify availability
-# ----------------------------------------
-Type "npx -y sarra --version"
+Type "sarra --version"
 Enter
-Sleep 2s
+Sleep 1.5s
 Type "clear"
 Enter
-Sleep 500ms
 
 # ----------------------------------------
 # 1. ID Generation
 # ----------------------------------------
-Type "# 1. ID Generation"
+Type "# 1. ID Generation (UUID v4, v7, and Secure Tokens)"
 Enter
-Type "npx -y sarra id uuid --count 3"
-Enter
-Sleep 2s
-
-Type ""
-Enter
-Type "# UUID v7 (time-ordered)"
-Enter
-Type "npx -y sarra id uuid --uuid-version v7 --count 2"
+Type "sarra id uuid --count 3"
 Enter
 Sleep 2s
 
 Type ""
 Enter
-Type "# Random secure token"
+Type "# UUID v7 (Time-ordered for databases)"
 Enter
-Type "npx -y sarra id random --length 32"
+Type "sarra id uuid --uuid-version v7 --count 2"
+Enter
+Sleep 2s
+
+Type ""
+Enter
+Type "# Generate a 32-character secure random token"
+Enter
+Type "sarra id random --length 32"
 Enter
 Sleep 2s
 Type "clear"
 Enter
-Sleep 500ms
 
 # ----------------------------------------
 # 2. Cryptography
 # ----------------------------------------
-Type "# 2. Cryptography"
+Type "# 2. Cryptography & Encoding"
 Enter
-Type "echo 'hello world' | npx -y sarra crypto hash sha256"
-Enter
-Sleep 2s
-
-Type ""
-Enter
-Type "# Base64 encode"
-Enter
-Type "npx -y sarra crypto base64 'secret data'"
+Type "echo 'hello world' | sarra crypto hash sha256"
 Enter
 Sleep 2s
 
 Type ""
 Enter
-Type "# Base64 decode"
+Type "# Quickly Base64 encode a string"
 Enter
-Type "npx -y sarra crypto base64 --decode 'c2VjcmV0IGRhdGE='"
+Type "sarra crypto base64 'secret data'"
+Enter
+Sleep 2s
+
+Type ""
+Enter
+Type "# Decode it back"
+Enter
+Type "sarra crypto base64 --decode 'c2VjcmV0IGRhdGE='"
 Enter
 Sleep 2s
 Type "clear"
 Enter
-Sleep 500ms
 
 # ----------------------------------------
 # 3. JSON Processing
 # ----------------------------------------
 Type "# 3. JSON Utilities"
 Enter
-
-# Use backticks for the Type command to handle the internal quotes
 Type `echo '{"name": "John", "age": 30, "city": "NYC"}' > data.json`
 Enter
 Sleep 1s
 
 Type ""
 Enter
-Type "# Pretty format"
+Type "# Pretty-print JSON files"
 Enter
-Type "npx -y sarra data json format data.json"
-Enter
-Sleep 2s
-
-Type ""
-Enter
-Type "# Query field"
-Enter
-Type "npx -y sarra data json query name data.json"
+Type "sarra data json data.json"
 Enter
 Sleep 2s
 
 Type ""
 Enter
-Type "# Validate JSON"
+Type "# Extract specific fields"
 Enter
-Type "npx -y sarra data json validate data.json"
+Type "sarra data json query name data.json"
 Enter
 Sleep 2s
 Type "clear"
 Enter
-Sleep 500ms
 
 # ----------------------------------------
 # 4. QR Codes
 # ----------------------------------------
-Type "# 4. QR Codes"
+Type "# 4. QR Codes (Generate images or terminal previews)"
 Enter
-Type "npx -y sarra qr generate 'https://github.com/jordanovvvv/sarra-cli' -t"
+Type "sarra qr generate 'https://github.com/jordanovvvv/sarra-cli' -t"
 Enter
 Sleep 4s
 
 Type ""
 Enter
-Type "# ASCII preview"
+Type "# Instant ASCII preview in terminal"
 Enter
-Type "npx -y sarra qr terminal 'Hello Sarra!'"
+Type "sarra qr terminal 'Hello Sarra!'"
 Enter
 Sleep 3s
 Type "clear"
 Enter
-Sleep 500ms
 
 # ----------------------------------------
 # 5. Time Utilities
 # ----------------------------------------
 Type "# 5. Time Utilities"
 Enter
-Type "npx -y sarra time now"
+Type "sarra time now"
 Enter
 Sleep 1s
 
 Type ""
 Enter
-Type "npx -y sarra time now --unix"
+Type "sarra time now --unix"
 Enter
 Sleep 1s
-
-Type ""
-Enter
-Type "npx -y sarra time now --format date"
-Enter
-Sleep 2s
 Type "clear"
 Enter
-Sleep 500ms
 
 # ----------------------------------------
 # 6. SSL Certificates
 # ----------------------------------------
-Type "# 6. SSL Certificates"
+Type "# 6. SSL Certificates (Local development made easy)"
 Enter
-Type "npx -y sarra ssl generate --domain localhost"
+Type "sarra ssl generate --domain localhost"
 Enter
 Sleep 4s
 
@@ -190,17 +177,18 @@ Enter
 Sleep 2s
 Type "clear"
 Enter
-Sleep 500ms
 
 # ----------------------------------------
 # Finale
 # ----------------------------------------
-Type "# Sarra CLI"
+Type "################################################"
 Enter
-Type "# Install once: npm install -g sarra"
+Type "#  Sarra CLI is ready for your workflow.        #"
 Enter
-Type "# Or run anywhere: npx sarra <command>"
+Type "#  Install: npm install -g sarra               #"
 Enter
-Type "# Docs: https://github.com/jordanovvvv/sarra-cli"
+Type "#  Docs: github.com/jordanovvvv/sarra-cli      #"
 Enter
-Sleep 4s
+Type "################################################"
+Enter
+Sleep 5s
