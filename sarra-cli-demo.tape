@@ -61,7 +61,30 @@ Type "clear"
 Enter
 
 # ----------------------------------------
-# 3. JSON
+# 3. Geolocation & Network
+# ----------------------------------------
+Type "# IP & Geolocation"
+Enter
+Type "sarra geo my-ip"
+Enter
+Sleep 1.5s
+
+Type ""
+Enter
+Type "sarra geo lookup 8.8.8.8"
+Enter
+Sleep 2s
+
+Type ""
+Enter
+Type "sarra geo validate 192.168.1.1"
+Enter
+Sleep 1.5s
+Type "clear"
+Enter
+
+# ----------------------------------------
+# 4. JSON
 # ----------------------------------------
 Type "# JSON utilities"
 Enter
@@ -80,7 +103,7 @@ Type "clear"
 Enter
 
 # ----------------------------------------
-# 4. QR Codes
+# 5. QR Codes
 # ----------------------------------------
 Type "# QR code in terminal"
 Enter
@@ -91,7 +114,7 @@ Type "clear"
 Enter
 
 # ----------------------------------------
-# 5. Time & SSL
+# 6. Time & SSL
 # ----------------------------------------
 Type "# Quick utilities"
 Enter

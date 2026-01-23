@@ -12,6 +12,7 @@ const chalk_1 = __importDefault(require("chalk"));
 const generator_1 = require("./commands/qrcodes/generator");
 const time_1 = require("./commands/time/time");
 const ssl_1 = require("./commands/ssl/ssl");
+const geo_1 = require("./commands/geo");
 const program = new commander_1.Command();
 program
     .name("sarra")
@@ -29,6 +30,7 @@ ${chalk_1.default.bold.cyan("COMMAND GROUPS")}
   ${chalk_1.default.green("time")}      Date and time utilities
   ${chalk_1.default.green("qr")}        QR code generation
   ${chalk_1.default.green("ssl")}       SSL certificate generation
+  ${chalk_1.default.green("geo")}      Geographical and IP utilities
 
 ${chalk_1.default.bold.cyan("EXAMPLES")}
 
@@ -36,10 +38,17 @@ ${chalk_1.default.bold.cyan("EXAMPLES")}
   ${chalk_1.default.green("sarra id random --length 32")}
   ${chalk_1.default.green("sarra time now")}
   ${chalk_1.default.green("sarra data json-pretty file.json")}
-  ${chalk_1.default.green("sarra crypto hash 'my secret'")}
+  ${chalk_1.default.green("sarra crypto hash sha256 'my secret'")}
+  ${chalk_1.default.green("sarra crypto aes-encrypt 'secret message'")}
+  ${chalk_1.default.green("sarra crypto aes-decrypt <data> -k <key> -i <iv> -t <tag>")}
+  ${chalk_1.default.green("sarra crypto rsa-keygen --size 4096")}
+  ${chalk_1.default.green("sarra crypto rsa-encrypt 'message' -p public_key.pem")}
+  ${chalk_1.default.green("sarra crypto rsa-decrypt <data> -k private_key.pem")}
   ${chalk_1.default.green("sarra qr generate 'Hello World'")}
   ${chalk_1.default.green("sarra crypto ssl generate --domain example.com --validity 90")}
   ${chalk_1.default.green("sarra crypto ssl generate --domain myapp.local")}
+  ${chalk_1.default.green("sarra geo my-ip --ipv4")}
+  ${chalk_1.default.green("sarra geo lookup <ip-address>")}
 
 ${chalk_1.default.bold.cyan("TIPS")}
 
@@ -53,4 +62,5 @@ program.addCommand(data_1.dataCommands);
 program.addCommand(time_1.timeCommands);
 program.addCommand(generator_1.qrCommands);
 program.addCommand(ssl_1.sslCommands);
+program.addCommand(geo_1.geoCommands);
 program.parse();

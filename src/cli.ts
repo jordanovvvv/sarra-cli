@@ -9,6 +9,7 @@ import chalk from "chalk";
 import { qrCommands } from "./commands/qrcodes/generator";
 import { timeCommands } from "./commands/time/time";
 import { sslCommands } from "./commands/ssl/ssl";
+import { geoCommands } from "./commands/geo";
 
 const program = new Command();
 
@@ -31,6 +32,7 @@ ${chalk.bold.cyan("COMMAND GROUPS")}
   ${chalk.green("time")}      Date and time utilities
   ${chalk.green("qr")}        QR code generation
   ${chalk.green("ssl")}       SSL certificate generation
+  ${chalk.green("geo")}      Geographical and IP utilities
 
 ${chalk.bold.cyan("EXAMPLES")}
 
@@ -47,6 +49,8 @@ ${chalk.bold.cyan("EXAMPLES")}
   ${chalk.green("sarra qr generate 'Hello World'")}
   ${chalk.green("sarra crypto ssl generate --domain example.com --validity 90")}
   ${chalk.green("sarra crypto ssl generate --domain myapp.local")}
+  ${chalk.green("sarra geo my-ip --ipv4")}
+  ${chalk.green("sarra geo lookup <ip-address>")}
 
 ${chalk.bold.cyan("TIPS")}
 
@@ -62,4 +66,5 @@ program.addCommand(dataCommands);
 program.addCommand(timeCommands);
 program.addCommand(qrCommands);
 program.addCommand(sslCommands);
+program.addCommand(geoCommands);
 program.parse();

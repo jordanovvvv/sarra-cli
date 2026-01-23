@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Released version v0.3.7]
 
 <details open>
 <summary><h2>[0.3.7] - 2026-01-23</h2></summary>
@@ -46,6 +46,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Automatic base64 decoding
   - Clear error messages for decryption failures
 
+#### Geolocation and IP Utilities
+
+- New `geo` command group for IP and network information
+- `my-ip` - Get your current public IP address
+  - IPv4 and IPv6 support with `--ipv4` and `--ipv6` flags
+  - Uses ipify.org API for reliable IP detection
+  - Text and JSON output formats
+- `lookup` - Get geolocation information for any IP address
+  - Comprehensive geolocation data (city, region, country, timezone, ISP)
+  - GPS coordinates (latitude, longitude)
+  - Postal code information
+  - Auto-detects your own IP if no argument provided
+  - Uses ipapi.co API
+  - Clear formatted output with emoji icons
+- `validate` - Validate IPv4 and IPv6 addresses
+  - Regex-based validation for both IP versions
+  - Returns IP type (IPv4/IPv6)
+  - Works offline (no API calls)
+  - Exit code 0 for valid, 1 for invalid (useful in scripts)
+- `local` - Display local network interface information
+  - Lists all non-loopback network interfaces
+  - Shows IP addresses, MAC addresses, and interface types
+  - Supports both IPv4 and IPv6 interfaces
+  - Works offline (uses Node.js os module)
+
 #### Documentation
 
 - Comprehensive crypto documentation in `docs/crypto-help.md`
@@ -58,6 +83,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Algorithm comparison table (hash, AES, RSA)
 - Examples organized by use case
 - Updated main README with crypto command overview
+- Added `geo` command section to main README
+- Geolocation command reference with syntax and examples
+- Usage notes about API rate limits and offline capabilities
+- Updated command groups overview with geo utilities
 
 ### Features
 
@@ -69,6 +98,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Flexible Output**: Text or JSON format with `--format` global option
 - **Key Management**: Auto-generation or custom key support
 
+#### Network and Geolocation
+
+- **Network Diagnostics**: Quickly check your public IP and location
+- **IP Validation**: Validate IP addresses for scripts and automation
+- **Network Discovery**: View local network configuration
+- **Geolocation Lookup**: Get detailed location data for any IP
+- **Zero Configuration**: No API keys required (uses free public APIs)
+
 #### Security Features
 
 - Industry-standard algorithms (AES-256-GCM, RSA-OAEP with SHA-256)
@@ -79,12 +116,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Developer Experience
 
-- Consistent CLI interface across all crypto commands
+- Consistent CLI interface across all crypto and geo commands
 - Interactive prompts with sensible defaults
 - Stdin/stdout support for Unix-style piping
 - Colored terminal output for better readability
 - JSON format option for programmatic usage
 - Automatic directory creation for key and output files
+- Clear error messages with actionable guidance
+- Offline support for validation and local network commands
 
 ### Changed
 
@@ -94,7 +133,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added AES and RSA examples to Quick Start
 - Enhanced command reference with all crypto subcommands
 - Added security best practices section
-- Updated help text examples with crypto commands
+- Updated help text examples with crypto and geo commands
+- Enhanced examples section with geolocation use cases
 
 #### Command Updates
 
@@ -116,6 +156,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RSA is suitable for encrypting small amounts of data
 - For encrypting large files, use RSA to encrypt an AES key, then use AES for the data
 - All cryptographic operations use Node.js built-in `crypto` module (no external dependencies)
+- `my-ip` and `lookup` geo commands require internet connection
+- `lookup` command uses ipapi.co free tier (rate limited to 1000 requests/day)
+- `validate` and `local` geo commands work completely offline
+- All geo commands use HTTPS for secure API communication
 
 </details>
 

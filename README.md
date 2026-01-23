@@ -48,6 +48,7 @@ sarra ssl generate
 - **[`qr`](#qr---qr-code-generation)** - QR code generation ([detailed docs](./docs/qr-help.md))
 - **[`time`](#time---date-and-time-utilities)** - Date and time utilities ([detailed docs](./docs/time-help.md))
 - **[`ssl`](#ssl---ssl-certificate-generation)** - SSL certificate generation ([detailed docs](./docs/ssl-help.md))
+- **[`ssl`](#geo---geo-and-ip-location-utilization)** - Geolocation and IP location utilities ([detailed docs](./docs/geo-help.md))
 
 Use `--help` on any command for more details:
 
@@ -632,6 +633,82 @@ sarra id --format json uuid -o uuids.json
 sarra crypto --format json base64 "data" -o encoded.json
 ```
 
+### Geolocation and IP Utilities
+
+IP address and geolocation utilities for network information.
+Commands
+
+```bash
+my-ip - Get your current public IP address
+lookup - Get geolocation information for an IP address
+validate - Validate an IP address (IPv4 or IPv6)
+local - Get local network interface information
+```
+
+# Examples
+
+## Get your public IP
+
+```bash
+sarra geo my-ip
+```
+
+# Get IPv4 only
+
+```bash
+sarra geo my-ip --ipv4
+```
+
+# Lookup IP geolocation
+
+```bash
+sarra geo lookup 8.8.8.8
+```
+
+# Lookup your own IP info
+
+```bash
+sarra geo lookup
+```
+
+# Validate IP addresses
+
+```bash
+sarra geo validate 192.168.1.1
+sarra geo validate 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+```
+
+# Show local network interfaces
+
+sarra geo local
+
+# JSON output
+
+```bash
+sarra geo --format json my-ip
+sarra geo --format json lookup 1.1.1.1
+```
+
+Options:
+
+```bash
+  -4, --ipv4    Show only IPv4 address
+  -6, --ipv6    Show only IPv6 address
+```
+
+Arguments:
+ip IP address to validate
+
+# Notes
+
+```bash
+my-ip and lookup commands require internet connection
+lookup uses ipapi.co free API (rate limited to 1000 requests/day)
+validate and local work offline
+Local command skips loopback interfaces
+All commands support --format json for programmatic usage
+```
+
 ---
 
 ## Tips
@@ -657,6 +734,7 @@ Detailed documentation for each command group:
 - [QR Code Commands](./docs/qr-help.md)
 - [Time Commands](./docs/time-help.md)
 - [SSL Commands (Certificate Generation)](./docs/ssl-help.md)
+- [Geo and IP Commands](./docs/geo-help.md)
 
 ---
 
@@ -842,6 +920,5 @@ Planned features for future releases:
 - 📦 Archive utilities (zip, tar)
 - 🎨 Image processing and optimization
 - 🔍 File search and text processing
-- 🌍 Geolocation and IP utilities
 
 ---

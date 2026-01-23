@@ -8,6 +8,7 @@ const DOCS = [
   "qrcode-help.md",
   "ssl-help.md",
   "time-help.md",
+  "geo-help.md",
 ];
 
 for (const file of DOCS) {

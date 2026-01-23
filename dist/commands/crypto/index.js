@@ -30,4 +30,6 @@ exports.cryptoCommands = new commander_1.Command("crypto")
     .addCommand(base64_1.base64Command) // base64 encode/decode
     .addCommand(aes_1.aesEncryptCommand) // AES Encryption Command
     .addCommand(aes_1.aesDecryptCommand) // AES Decryption Command
-    .addCommand(rsa_1.rsaKeygenCommand); // RSA Key Generation Command
+    .addCommand(rsa_1.rsaKeygenCommand) // RSA Key Generation Command
+    .addCommand(rsa_1.rsaEncryptCommand) // RSA Encrypt Command
+    .addCommand(rsa_1.rsaDecryptCommand); // RSA Decrypt Command
