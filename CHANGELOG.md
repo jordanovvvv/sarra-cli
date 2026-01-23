@@ -7,6 +7,118 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+<details open>
+<summary><h2>[0.3.7] - 2026-01-23</h2></summary>
+
+### Added
+
+#### AES Symmetric Encryption
+
+- New `aes-encrypt` command for AES-256-GCM encryption
+  - Auto-generated 256-bit encryption keys or custom key support (`-k/--key` option)
+  - Authenticated encryption with Galois/Counter Mode (GCM)
+  - Outputs encrypted data, IV, authentication tag, and key
+  - JSON format support for saving all decryption parameters together
+  - Interactive file save location prompt or direct output (`-y/--yes`, `-o/--out`)
+  - Supports stdin input for piping workflows
+- New `aes-decrypt` command for AES-256-GCM decryption
+  - Requires encryption key, IV, and authentication tag
+  - Tamper detection via authentication tag validation
+  - Clear error messages for invalid parameters
+  - File output or stdout support
+
+#### RSA Asymmetric Encryption
+
+- New `rsa-keygen` command for RSA key pair generation
+  - Configurable key sizes: 2048, 3072, 4096 bits (`-s/--size` option)
+  - PKCS#8 format for private keys, SPKI format for public keys
+  - PEM encoding for broad compatibility
+  - Outputs `public_key.pem` and `private_key.pem` files
+  - Interactive directory selection or direct output
+  - Security warnings about private key protection
+- New `rsa-encrypt` command for RSA public key encryption
+  - RSA-OAEP padding with SHA-256 for security
+  - Reads public key from PEM file (`-p/--public-key` option)
+  - Base64-encoded output
+  - Suitable for small data and key exchange scenarios
+- New `rsa-decrypt` command for RSA private key decryption
+  - Reads private key from PEM file (`-k/--private-key` option)
+  - Automatic base64 decoding
+  - Clear error messages for decryption failures
+
+#### Documentation
+
+- Comprehensive crypto documentation in `docs/crypto-help.md`
+- Command reference with syntax and options for all crypto commands
+- Security notes section covering:
+  - AES key management best practices
+  - RSA private key protection
+  - When to use AES vs RSA encryption
+  - Hybrid encryption recommendations (RSA + AES for large data)
+- Algorithm comparison table (hash, AES, RSA)
+- Examples organized by use case
+- Updated main README with crypto command overview
+
+### Features
+
+#### Encryption Capabilities
+
+- **AES-256-GCM**: Fast symmetric encryption for any data size
+- **RSA-OAEP**: Secure asymmetric encryption for key exchange
+- **Authenticated Encryption**: Automatic tamper detection with GCM mode
+- **Flexible Output**: Text or JSON format with `--format` global option
+- **Key Management**: Auto-generation or custom key support
+
+#### Security Features
+
+- Industry-standard algorithms (AES-256-GCM, RSA-OAEP with SHA-256)
+- Cryptographically secure random number generation
+- Authentication tags for data integrity verification
+- Clear security warnings and best practices
+- No plaintext key storage in examples
+
+#### Developer Experience
+
+- Consistent CLI interface across all crypto commands
+- Interactive prompts with sensible defaults
+- Stdin/stdout support for Unix-style piping
+- Colored terminal output for better readability
+- JSON format option for programmatic usage
+- Automatic directory creation for key and output files
+
+### Changed
+
+#### Documentation Updates
+
+- Updated main README crypto section to include encryption commands
+- Added AES and RSA examples to Quick Start
+- Enhanced command reference with all crypto subcommands
+- Added security best practices section
+- Updated help text examples with crypto commands
+
+#### Command Updates
+
+- Updated `hash` command examples to include algorithm specification
+- Improved consistency across all crypto commands
+- Enhanced error messages with actionable troubleshooting tips
+
+### Security
+
+- ⚠️ Clear warnings about encryption key management
+- 🔒 Recommendations for private key file permissions (`chmod 600`)
+- ✅ Guidance on hybrid encryption (RSA + AES) for large files
+- 📝 Warnings against committing keys to version control
+- 🔄 Best practices for key rotation and secure storage
+
+### Notes
+
+- AES keys must be exactly 32 bytes (64 hexadecimal characters)
+- RSA is suitable for encrypting small amounts of data
+- For encrypting large files, use RSA to encrypt an AES key, then use AES for the data
+- All cryptographic operations use Node.js built-in `crypto` module (no external dependencies)
+
+</details>
+
 ---
 
 <details open>

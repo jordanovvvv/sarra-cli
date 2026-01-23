@@ -38,7 +38,12 @@ ${chalk.bold.cyan("EXAMPLES")}
   ${chalk.green("sarra id random --length 32")}
   ${chalk.green("sarra time now")}
   ${chalk.green("sarra data json-pretty file.json")}
-  ${chalk.green("sarra crypto hash 'my secret'")}
+  ${chalk.green("sarra crypto hash sha256 'my secret'")}
+  ${chalk.green("sarra crypto aes-encrypt 'secret message'")}
+  ${chalk.green("sarra crypto aes-decrypt <data> -k <key> -i <iv> -t <tag>")}
+  ${chalk.green("sarra crypto rsa-keygen --size 4096")}
+  ${chalk.green("sarra crypto rsa-encrypt 'message' -p public_key.pem")}
+  ${chalk.green("sarra crypto rsa-decrypt <data> -k private_key.pem")}
   ${chalk.green("sarra qr generate 'Hello World'")}
   ${chalk.green("sarra crypto ssl generate --domain example.com --validity 90")}
   ${chalk.green("sarra crypto ssl generate --domain myapp.local")}
@@ -48,7 +53,7 @@ ${chalk.bold.cyan("TIPS")}
   • Use ${chalk.yellow("--help")} on any command for more details
   • Use ${chalk.yellow("--version")} to see the current version
   • Global options must appear before subcommands
-`
+`,
 );
 
 program.addCommand(idCommands);

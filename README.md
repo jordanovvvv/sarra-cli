@@ -112,45 +112,191 @@ Save to file? (Y/n/path):
 
 ---
 
-## `crypto` - Cryptography Utilities
+# `crypto` - Cryptography Utilities
 
-Cryptographic utilities for hashing and encoding.
+Cryptographic utilities for hashing, encoding, and encryption.
 
-📚 **[View detailed documentation](https://github.com/jordanovvvv/sarra-cli/blob/master/docs/crypto-help.md)**
-
-### Commands
+## Commands
 
 - `hash` - Generate cryptographic hashes (md5, sha1, sha256, sha512)
 - `base64` - Base64 encode or decode data
+- `aes-encrypt` - Encrypt data using AES-256-GCM
+- `aes-decrypt` - Decrypt AES-256-GCM encrypted data
+- `rsa-keygen` - Generate RSA key pair
+- `rsa-encrypt` - Encrypt data using RSA public key
+- `rsa-decrypt` - Decrypt data using RSA private key
 
-### Quick Examples
+## Global Options
 
-```bash
-# Generate SHA-256 hash
-sarra crypto hash sha256 "hello world"
-
-# Hash from stdin
-echo "data" | sarra crypto hash sha256
-
-# Base64 encode
-sarra crypto base64 "hello world"
-
-# Base64 decode
-sarra crypto base64 --decode SGVsbG8gd29ybGQ=
-
-# Save hash to file
-sarra crypto hash sha512 "secret" -o hash.txt
-
-# JSON format
-sarra crypto --format json hash sha256 "data" -o hash.json
+```
+--format <format>    Output format: text | json
 ```
 
-### Supported Hash Algorithms
+## Examples
 
-- **md5** - 128-bit (not cryptographically secure)
-- **sha1** - 160-bit (deprecated for security)
-- **sha256** - 256-bit (recommended)
-- **sha512** - 512-bit (maximum security)
+### Hashing
+
+```bash
+# Generate hashes
+sarra crypto hash sha256 "hello world"
+sarra crypto hash sha512 "data"
+echo "hello" | sarra crypto hash sha256
+
+# JSON output
+sarra crypto --format json hash sha256 "data"
+```
+
+### Base64
+
+```bash
+# Encode and decode
+sarra crypto base64 "hello world"
+sarra crypto base64 --decode SGVsbG8gd29ybGQ=
+echo "hello" | sarra crypto base64
+```
+
+### AES Encryption
+
+```bash
+# Encrypt (auto-generates key)
+sarra crypto aes-encrypt "secret message"
+
+# Encrypt with custom key
+sarra crypto aes-encrypt "message" -k <64-hex-chars>
+
+# Decrypt (requires key, IV, auth tag)
+sarra crypto aes-decrypt <encrypted-hex> -k <key> -i <iv> -t <tag>
+
+# JSON format (saves all parameters)
+sarra crypto --format json aes-encrypt "data" -o encrypted.json
+```
+
+### RSA Keys
+
+```bash
+# Generate key pair
+sarra crypto rsa-keygen
+sarra crypto rsa-keygen --size 4096 -o ./my-keys
+
+# Encrypt/Decrypt
+sarra crypto rsa-encrypt "message" -p public_key.pem
+sarra crypto rsa-decrypt <base64-data> -k private_key.pem
+```
+
+### Output Options
+
+```bash
+# Interactive prompt (default)
+sarra crypto hash sha256 "data"
+
+# Output to stdout
+sarra crypto hash sha256 "data" -y
+
+# Save to file
+sarra crypto hash sha256 "data" -o hash.txt
+sarra crypto --format json aes-encrypt "data" -o encrypted.json
+```
+
+## Supported Algorithms
+
+**Hash Algorithms:**
+
+- `md5` - 128-bit (not cryptographically secure)
+- `sha1` - 160-bit (deprecated for security)
+- `sha256` - 256-bit (recommended)
+- `sha512` - 512-bit (maximum security)
+
+**Encryption:**
+
+- `AES-256-GCM` - Authenticated symmetric encryption (256-bit key)
+- `RSA-OAEP` - Asymmetric encryption (2048/3072/4096-bit keys)
+
+## Command Reference
+
+### `hash`
+
+```bash
+sarra crypto hash <algorithm> [input] [options]
+
+Options:
+  -o, --out <file>    Write output to file
+  -y, --yes           Output to stdout
+```
+
+### `base64`
+
+```bash
+sarra crypto base64 [input] [options]
+
+Options:
+  -d, --decode        Decode instead of encode
+  -o, --out <file>    Write output to file
+  -y, --yes           Output to stdout
+```
+
+### `aes-encrypt`
+
+```bash
+sarra crypto aes-encrypt [input] [options]
+
+Options:
+  -k, --key <key>     Encryption key (hex, 32 bytes)
+  -o, --out <file>    Write output to file
+  -y, --yes           Output to stdout
+```
+
+### `aes-decrypt`
+
+```bash
+sarra crypto aes-decrypt [input] [options]
+
+Options:
+  -k, --key <key>     Decryption key (required)
+  -i, --iv <iv>       Initialization vector (required)
+  -t, --tag <tag>     Auth tag (required)
+  -o, --out <file>    Write output to file
+  -y, --yes           Output to stdout
+```
+
+### `rsa-keygen`
+
+```bash
+sarra crypto rsa-keygen [options]
+
+Options:
+  -s, --size <bits>   Key size: 2048, 3072, 4096 (default: 2048)
+  -o, --out <dir>     Output directory
+  -y, --yes           Output to stdout
+```
+
+### `rsa-encrypt`
+
+```bash
+sarra crypto rsa-encrypt [input] [options]
+
+Options:
+  -p, --public-key <file>    Public key file (required)
+  -o, --out <file>           Write output to file
+  -y, --yes                  Output to stdout
+```
+
+### `rsa-decrypt`
+
+```bash
+sarra crypto rsa-decrypt [input] [options]
+
+Options:
+  -k, --private-key <file>   Private key file (required)
+  -o, --out <file>           Write output to file
+  -y, --yes                  Output to stdout
+```
+
+## Security Notes
+
+- ⚠️ **AES**: Save encryption keys securely - you cannot decrypt without them. Use JSON format to save all decryption parameters together.
+- 🔒 **RSA**: Keep private keys secure and never share them. Use `chmod 600` on private key files.
+- ✓ Use SHA-256 or SHA-512 for cryptographically secure hashing.
+- ✓ For large data, use RSA to encrypt an AES key, then use AES for the data.
 
 ---
 
@@ -360,13 +506,11 @@ sarra ssl letsencrypt -d example.com -e admin@example.com --standalone --staging
 ### Prerequisites for Let's Encrypt
 
 1. **Certbot installed:**
-
    - macOS: `brew install certbot`
    - Ubuntu: `sudo apt install certbot`
    - Windows: Download from https://certbot.eff.org
 
 2. **Domain ownership:**
-
    - Real domain (not `localhost` or `.local`)
    - DNS points to your server's IP
    - Verify: `dig +short example.com`

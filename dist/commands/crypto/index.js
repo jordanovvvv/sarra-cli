@@ -10,6 +10,8 @@ const path_1 = __importDefault(require("path"));
 const hash_1 = require("./hash");
 const base64_1 = require("./base64");
 const prettyHelp_1 = require("../../help/prettyHelp");
+const aes_1 = require("./aes");
+const rsa_1 = require("./rsa");
 const helpPath = path_1.default.resolve(__dirname, "../../docs/crypto-help.md");
 let helpText = "";
 try {
@@ -24,5 +26,8 @@ exports.cryptoCommands = new commander_1.Command("crypto")
     .action(function () {
     this.outputHelp();
 })
-    .addCommand(hash_1.hashCommand)
-    .addCommand(base64_1.base64Command);
+    .addCommand(hash_1.hashCommand) // md5 | sha1 | sha256 | sha512
+    .addCommand(base64_1.base64Command) // base64 encode/decode
+    .addCommand(aes_1.aesEncryptCommand) // AES Encryption Command
+    .addCommand(aes_1.aesDecryptCommand) // AES Decryption Command
+    .addCommand(rsa_1.rsaKeygenCommand); // RSA Key Generation Command
