@@ -5,6 +5,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Released version v0.3.9]
+
+<details open>
+<summary><h2>[0.3.9] - 2026-01-26</h2></summary>
+
+### Added
+
+#### SDK for Node.js and React Applications
+
+- **Programmatic API**: All Sarra CLI commands now available as importable functions
+- **TypeScript Support**: Full type definitions for all SDK functions
+- **Framework Agnostic**: Works with React, Next.js, Node.js, and any JavaScript framework
+- **Zero Configuration**: Simple `npm install sarra` for both CLI and SDK usage
+
+#### SDK Modules
+
+**ID Generation**
+
+- `sarra.id.uuid()` - Generate UUIDs (v4 and v7 support)
+- `sarra.id.random()` - Generate cryptographically secure random tokens
+
+**Cryptography**
+
+- `sarra.crypto.hash()` - Generate cryptographic hashes (md5, sha1, sha256, sha512)
+- `sarra.crypto.base64()` - Base64 encode and decode
+- `sarra.crypto.aesEncrypt()` - AES-256-GCM encryption
+- `sarra.crypto.aesDecrypt()` - AES-256-GCM decryption
+- `sarra.crypto.rsaKeygen()` - Generate RSA key pairs (2048/3072/4096-bit)
+- `sarra.crypto.rsaEncrypt()` - RSA public key encryption
+- `sarra.crypto.rsaDecrypt()` - RSA private key decryption
+
+**Geolocation & IP**
+
+- `sarra.geo.myIp()` - Get your public IP address (IPv4/IPv6)
+- `sarra.geo.lookup()` - Get geolocation data for any IP address
+- `sarra.geo.validate()` - Validate IPv4 and IPv6 addresses
+
+### Changed
+
+#### Package Structure
+
+- Dual export: CLI executable + SDK library in single package
+- Updated `package.json` with proper exports for both CLI and SDK
+- Separated core logic into `src/sdk/` for reusability
+- Refactored CLI commands to use SDK functions internally
+
+### Documentation
+
+- Comprehensive SDK README with complete API reference
+- React component examples for all SDK modules (UUID Generator, Hash Generator, IP Lookup, Encryptor)
+- TypeScript usage examples with full type definitions
+- Installation guide for both CLI and SDK usage
+- Added SDK documentation link in main installation section
+
+### Notes
+
+- SDK uses the same battle-tested code as the CLI
+- All functions return typed results (TypeScript)
+- Async functions for geo module (API calls)
+- Synchronous functions for id and crypto modules
+- Browser-compatible (except Node.js-specific crypto features)
+
+</details>
+
+---
+
 ## [Released version v0.3.7]
 
 <details open>

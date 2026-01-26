@@ -4,6 +4,8 @@ Daily developer enhancement tools - A collection of CLI utilities for common dev
 
 ## Installation
 
+### For CLI Usage (Global)
+
 ```bash
 npm install -g sarra
 ```
@@ -13,6 +15,14 @@ Or use directly with npx:
 ```bash
 npx sarra <command>
 ```
+
+### For App/Library Usage (Local)
+
+```bash
+npm install sarra
+```
+
+**→ [See SDK Documentation below](#sdk) for using Sarra in your Node.js/React applications.**
 
 ## Demo
 
@@ -893,6 +903,584 @@ echo "Build started: $(sarra time now)" >> build.log
 - Check for trailing commas
 - Verify quote types (must use double quotes)
 - Use `sarra data json format` to auto-fix formatting
+
+---
+
+# SDK
+
+Use Sarra's powerful utilities in your Node.js and React applications.
+
+## Usage
+
+### Import
+
+```typescript
+// Import the entire SDK
+import { sarra } from "sarra";
+
+// Or import specific modules
+import { id, crypto, geo } from "sarra";
+```
+
+## API Reference
+
+### ID Generation
+
+Generate UUIDs and cryptographically secure random tokens.
+
+#### `sarra.id.uuid(options)`
+
+Generate UUIDs (v4 or v7).
+
+```typescript
+interface UUIDOptions {
+  version?: "v4" | "v7"; // Default: 'v4'
+  count?: number; // Default: 1
+}
+
+interface UUIDResult {
+  version: string;
+  uuids: string[];
+}
+```
+
+**Examples:**
+
+```typescript
+// Generate single UUID v4
+const result = sarra.id.uuid();
+console.log(result.uuids[0]); // 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
+
+// Generate 5 UUID v4s
+const result = sarra.id.uuid({ count: 5 });
+console.log(result.uuids); // Array of 5 UUIDs
+
+// Generate UUID v7 (time-ordered)
+const result = sarra.id.uuid({ version: "v7", count: 3 });
+console.log(result.uuids); // Array of 3 time-ordered UUIDs
+```
+
+#### `sarra.id.random(options)`
+
+Generate cryptographically secure random tokens.
+
+```typescript
+interface RandomTokenOptions {
+  length?: number; // Byte length, default: 16
+  count?: number; // Default: 1
+}
+
+interface RandomTokenResult {
+  tokens: string[];
+  count: number;
+  length: number;
+  encoding: "hex";
+}
+```
+
+**Examples:**
+
+```typescript
+// Generate 16-byte token (32 hex characters)
+const result = sarra.id.random();
+console.log(result.tokens[0]); // '4f3d2e1c0b9a8f7e6d5c4b3a2f1e0d9c'
+
+// Generate 32-byte token (64 hex characters)
+const result = sarra.id.random({ length: 32 });
+console.log(result.tokens[0]); // 64-character hex string
+
+// Generate multiple tokens
+const result = sarra.id.random({ length: 16, count: 5 });
+console.log(result.tokens); // Array of 5 tokens
+```
+
+---
+
+### Cryptography
+
+Hash, encode, encrypt, and decrypt data.
+
+#### `sarra.crypto.hash(options)`
+
+Generate cryptographic hashes.
+
+```typescript
+interface HashOptions {
+  algorithm: "md5" | "sha1" | "sha256" | "sha512";
+  input: string;
+}
+```
+
+**Examples:**
+
+```typescript
+// SHA-256 hash
+const hash = sarra.crypto.hash({
+  algorithm: "sha256",
+  input: "hello world",
+});
+console.log(hash); // 'b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9'
+
+// MD5 hash
+const md5 = sarra.crypto.hash({
+  algorithm: "md5",
+  input: "secret",
+});
+```
+
+#### `sarra.crypto.base64(options)`
+
+Base64 encode or decode strings.
+
+```typescript
+interface Base64Options {
+  input: string;
+  decode?: boolean; // Default: false
+}
+```
+
+**Examples:**
+
+```typescript
+// Encode
+const encoded = sarra.crypto.base64({ input: "hello world" });
+console.log(encoded); // 'aGVsbG8gd29ybGQ='
+
+// Decode
+const decoded = sarra.crypto.base64({
+  input: "aGVsbG8gd29ybGQ=",
+  decode: true,
+});
+console.log(decoded); // 'hello world'
+```
+
+#### `sarra.crypto.aesEncrypt(options)`
+
+Encrypt data using AES-256-GCM.
+
+```typescript
+interface AESEncryptOptions {
+  input: string;
+  key?: string; // Optional 64-char hex string
+}
+
+interface AESEncryptResult {
+  encrypted: string;
+  iv: string;
+  authTag: string;
+  key: string;
+}
+```
+
+**Examples:**
+
+```typescript
+// Encrypt with auto-generated key
+const result = sarra.crypto.aesEncrypt({
+  input: "secret message",
+});
+
+console.log(result.encrypted); // Encrypted data (hex)
+console.log(result.key); // 64-char hex key
+console.log(result.iv); // 32-char hex IV
+console.log(result.authTag); // 32-char hex auth tag
+
+// Encrypt with custom key
+const result = sarra.crypto.aesEncrypt({
+  input: "secret message",
+  key: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+});
+```
+
+#### `sarra.crypto.aesDecrypt(options)`
+
+Decrypt AES-256-GCM encrypted data.
+
+```typescript
+interface AESDecryptOptions {
+  encrypted: string;
+  key: string;
+  iv: string;
+  authTag: string;
+}
+```
+
+**Examples:**
+
+```typescript
+// Decrypt data
+const decrypted = sarra.crypto.aesDecrypt({
+  encrypted: result.encrypted,
+  key: result.key,
+  iv: result.iv,
+  authTag: result.authTag,
+});
+
+console.log(decrypted); // 'secret message'
+```
+
+#### `sarra.crypto.rsaKeygen(options)`
+
+Generate RSA key pair.
+
+```typescript
+interface RSAKeygenOptions {
+  size?: 2048 | 3072 | 4096; // Default: 2048
+}
+
+interface RSAKeygenResult {
+  publicKey: string; // PEM format
+  privateKey: string; // PEM format
+}
+```
+
+**Examples:**
+
+```typescript
+// Generate 2048-bit key pair
+const keys = sarra.crypto.rsaKeygen();
+console.log(keys.publicKey); // '-----BEGIN PUBLIC KEY-----...'
+console.log(keys.privateKey); // '-----BEGIN PRIVATE KEY-----...'
+
+// Generate 4096-bit key pair
+const keys = sarra.crypto.rsaKeygen({ size: 4096 });
+```
+
+#### `sarra.crypto.rsaEncrypt(options)`
+
+Encrypt data using RSA public key.
+
+```typescript
+interface RSAEncryptOptions {
+  input: string;
+  publicKey: string; // PEM format
+}
+```
+
+**Examples:**
+
+```typescript
+const keys = sarra.crypto.rsaKeygen();
+
+const encrypted = sarra.crypto.rsaEncrypt({
+  input: "secret message",
+  publicKey: keys.publicKey,
+});
+
+console.log(encrypted); // Base64-encoded encrypted data
+```
+
+#### `sarra.crypto.rsaDecrypt(options)`
+
+Decrypt data using RSA private key.
+
+```typescript
+interface RSADecryptOptions {
+  encrypted: string; // Base64 format
+  privateKey: string; // PEM format
+}
+```
+
+**Examples:**
+
+```typescript
+const decrypted = sarra.crypto.rsaDecrypt({
+  encrypted: encrypted,
+  privateKey: keys.privateKey,
+});
+
+console.log(decrypted); // 'secret message'
+```
+
+---
+
+### Geolocation & IP
+
+Get IP addresses, validate IPs, and lookup geolocation data.
+
+#### `sarra.geo.myIp(ipv6?)`
+
+Get your public IP address.
+
+```typescript
+interface IpInfo {
+  ip: string;
+}
+```
+
+**Examples:**
+
+```typescript
+// Get IPv4 address
+const result = await sarra.geo.myIp();
+console.log(result.ip); // '203.0.113.42'
+
+// Get IPv6 address
+const result = await sarra.geo.myIp(true);
+console.log(result.ip); // '2001:0db8:85a3::8a2e:0370:7334'
+```
+
+#### `sarra.geo.lookup(ip?)`
+
+Get geolocation information for an IP address.
+
+```typescript
+interface GeolocationData {
+  ip: string;
+  city?: string;
+  region?: string;
+  country_name?: string;
+  country_code?: string;
+  timezone?: string;
+  org?: string;
+  postal?: string;
+  latitude?: number;
+  longitude?: number;
+}
+```
+
+**Examples:**
+
+```typescript
+// Lookup specific IP
+const data = await sarra.geo.lookup("8.8.8.8");
+console.log(data.city); // 'Mountain View'
+console.log(data.country_name); // 'United States'
+console.log(data.org); // 'Google LLC'
+
+// Lookup your own IP
+const data = await sarra.geo.lookup();
+console.log(data.city, data.country_name);
+```
+
+#### `sarra.geo.validate(ip)`
+
+Validate an IP address (IPv4 or IPv6).
+
+```typescript
+interface IpValidation {
+  ip: string;
+  valid: boolean;
+  type: "IPv4" | "IPv6" | null;
+}
+```
+
+**Examples:**
+
+```typescript
+// Validate IPv4
+const result = sarra.geo.validate("192.168.1.1");
+console.log(result.valid); // true
+console.log(result.type); // 'IPv4'
+
+// Validate IPv6
+const result = sarra.geo.validate("2001:0db8:85a3::8a2e:0370:7334");
+console.log(result.valid); // true
+console.log(result.type); // 'IPv6'
+
+// Invalid IP
+const result = sarra.geo.validate("999.999.999.999");
+console.log(result.valid); // false
+console.log(result.type); // null
+```
+
+---
+
+## React Examples
+
+### UUID Generator Component
+
+```tsx
+import { useState } from "react";
+import { sarra } from "sarra";
+
+function UUIDGenerator() {
+  const [uuids, setUuids] = useState<string[]>([]);
+
+  const generateUUIDs = () => {
+    const result = sarra.id.uuid({ version: "v4", count: 5 });
+    setUuids(result.uuids);
+  };
+
+  return (
+    <div>
+      <button onClick={generateUUIDs}>Generate UUIDs</button>
+      <ul>
+        {uuids.map((uuid) => (
+          <li key={uuid}>{uuid}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+### Hash Generator
+
+```tsx
+import { useState } from "react";
+import { sarra } from "sarra";
+
+function HashGenerator() {
+  const [input, setInput] = useState("");
+  const [hash, setHash] = useState("");
+
+  const generateHash = () => {
+    const result = sarra.crypto.hash({
+      algorithm: "sha256",
+      input,
+    });
+    setHash(result);
+  };
+
+  return (
+    <div>
+      <input
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Enter text to hash"
+      />
+      <button onClick={generateHash}>Generate SHA-256</button>
+      {hash && <code>{hash}</code>}
+    </div>
+  );
+}
+```
+
+### IP Lookup Component
+
+```tsx
+import { useState } from "react";
+import { sarra } from "sarra";
+
+function IPLookup() {
+  const [ip, setIp] = useState("");
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const lookup = async () => {
+    setLoading(true);
+    try {
+      const result = await sarra.geo.lookup(ip || undefined);
+      setData(result);
+    } catch (error) {
+      console.error("Lookup failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <input
+        value={ip}
+        onChange={(e) => setIp(e.target.value)}
+        placeholder="Enter IP (or leave empty for your IP)"
+      />
+      <button onClick={lookup} disabled={loading}>
+        {loading ? "Looking up..." : "Lookup"}
+      </button>
+
+      {data && (
+        <div>
+          <p>IP: {data.ip}</p>
+          <p>City: {data.city}</p>
+          <p>Country: {data.country_name}</p>
+          <p>ISP: {data.org}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+### Encryption Example
+
+```tsx
+import { useState } from "react";
+import { sarra } from "sarra";
+
+function Encryptor() {
+  const [message, setMessage] = useState("");
+  const [encrypted, setEncrypted] = useState(null);
+  const [decrypted, setDecrypted] = useState("");
+
+  const encrypt = () => {
+    const result = sarra.crypto.aesEncrypt({ input: message });
+    setEncrypted(result);
+  };
+
+  const decrypt = () => {
+    if (!encrypted) return;
+    const result = sarra.crypto.aesDecrypt({
+      encrypted: encrypted.encrypted,
+      key: encrypted.key,
+      iv: encrypted.iv,
+      authTag: encrypted.authTag,
+    });
+    setDecrypted(result);
+  };
+
+  return (
+    <div>
+      <input
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Enter message"
+      />
+      <button onClick={encrypt}>Encrypt</button>
+
+      {encrypted && (
+        <>
+          <div>
+            <p>Encrypted: {encrypted.encrypted.slice(0, 50)}...</p>
+            <p>Key: {encrypted.key.slice(0, 20)}...</p>
+          </div>
+          <button onClick={decrypt}>Decrypt</button>
+          {decrypted && <p>Decrypted: {decrypted}</p>}
+        </>
+      )}
+    </div>
+  );
+}
+```
+
+---
+
+## TypeScript Support
+
+Sarra is written in TypeScript and includes full type definitions.
+
+```typescript
+import { sarra, UUIDOptions, GeolocationData } from "sarra";
+
+const options: UUIDOptions = {
+  version: "v4",
+  count: 5,
+};
+
+const result = sarra.id.uuid(options);
+
+const data: GeolocationData = await sarra.geo.lookup("8.8.8.8");
+```
+
+---
+
+## Notes
+
+### Crypto Module
+
+- All cryptographic operations use Node.js built-in `crypto` module
+- AES keys must be exactly 32 bytes (64 hexadecimal characters)
+- RSA is suitable for encrypting small amounts of data
+- For large files, use RSA to encrypt an AES key, then use AES for the data
+
+### Geo Module
+
+- `myIp()` and `lookup()` require internet connection
+- `lookup()` uses ipapi.co free tier (rate limited to 1000 requests/day)
+- `validate()` works offline (no API calls)
+- All API calls use HTTPS for secure communication
 
 ---
 
