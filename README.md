@@ -1496,6 +1496,19 @@ See [CHANGELOG](CHANGELOG.md) for version history and updates.
 
 Contributions are welcome! Please open an issue or submit a pull request.
 
+### Contributors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/jordanovvvv">
+        <img src="https://github.com/jordanovvvv.png" width="100px;" alt="Simeon Jordanov"/><br />
+        <sub><b>Simeon Jordanov</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
 ---
 
 ## Roadmap
