@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
 Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
 const id_1 = require("./commands/id");
@@ -15,13 +17,15 @@ const ssl_1 = require("./commands/ssl/ssl");
 const geo_1 = require("./commands/geo");
 const program = new commander_1.Command();
 program
-    .name("sarra")
-    .description("Daily developer ability enhancement tools")
-    .version("0.3.7", "-v, --version", "Display the current version")
-    .showHelpAfterError()
-    .helpOption("-h, --help", "Display help for command");
+  .name("sarra")
+  .description("Daily developer ability enhancement tools")
+  .version("0.3.10", "-v, --version", "Display the current version")
+  .showHelpAfterError()
+  .helpOption("-h, --help", "Display help for command");
 // pretify main help output
-program.addHelpText("after", `
+program.addHelpText(
+  "after",
+  `
 ${chalk_1.default.bold.cyan("COMMAND GROUPS")}
 
   ${chalk_1.default.green("id")}        Identifiers, tokens, UUIDs
@@ -55,7 +59,8 @@ ${chalk_1.default.bold.cyan("TIPS")}
   • Use ${chalk_1.default.yellow("--help")} on any command for more details
   • Use ${chalk_1.default.yellow("--version")} to see the current version
   • Global options must appear before subcommands
-`);
+`,
+);
 program.addCommand(id_1.idCommands);
 program.addCommand(crypto_1.cryptoCommands);
 program.addCommand(data_1.dataCommands);
