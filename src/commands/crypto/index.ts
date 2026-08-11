@@ -18,6 +18,11 @@ try {
 
 export const cryptoCommands = new Command("crypto")
   .description("Cryptographic utilities")
+  .option(
+    "--format <format>",
+    "Output format: text or json (applies to supported crypto subcommands)",
+    "text"
+  )
   .addHelpText("after", `\n${prettyHelp(helpText)}`)
   .action(function () {
     this.outputHelp();

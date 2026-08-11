@@ -1,18 +1,19 @@
 import { Command } from "commander";
 import crypto from "crypto";
 import { readStdin } from "../../utils/stdin";
-import { getSaveLocation } from "../../prompts/prompt-user";
 import fs from "fs";
 import path from "path";
 import chalk from "chalk";
+import { resolveOutputPath } from "../../utils/output";
 
 export const hashCommand = new Command("hash")
   .description("Generate cryptographic hash from input")
   .argument("<algorithm>", "Hash algorithm (md5 | sha1 | sha256 | sha512)")
   .argument("[input]", "Input string to hash (reads from stdin if omitted)")
   .option("-o, --out <file>", "Write output to a file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async function (algorithm, input, { out, yes }) {
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async function (algorithm, input, { out, save }) {
     const parentOpts = this.parent?.opts() as { format?: string };
     const format = parentOpts?.format ?? "text";
 
@@ -62,19 +63,8 @@ export const hashCommand = new Command("hash")
     }
 
     // Determine output method
-    let outputPath: string | null;
-
-    if (out) {
-      // User provided -o flag, use it directly
-      outputPath = out;
-    } else if (yes) {
-      // User used -y flag, output to stdout
-      outputPath = null;
-    } else {
-      // Ask user
-      const defaultFilename = format === "json" ? "hash.json" : "hash.txt";
-      outputPath = await getSaveLocation(defaultFilename);
-    }
+    const defaultFilename = format === "json" ? "hash.json" : "hash.txt";
+    const outputPath = await resolveOutputPath(out, save, defaultFilename);
 
     if (outputPath) {
       // Save to file

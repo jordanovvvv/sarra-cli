@@ -5,7 +5,7 @@ Cryptographic utilities for hashing, encoding, and encryption.
 ## Global Options
 
 ```
---format <format>    Output format for all crypto subcommands
+--format <format>    Output format for hash, base64, and aes-encrypt
                      Supported values: text | json
 ```
 
@@ -132,15 +132,18 @@ sarra crypto rsa-decrypt <data> -k private_key.pem -o decrypted.txt
 ### Output to Files
 
 ```bash
-# Interactive prompt (default behavior)
+# Output to stdout (default behavior)
 sarra crypto hash sha256 "secret data"
 sarra crypto base64 "encode this"
 sarra crypto aes-encrypt "message"
 
-# Skip prompt and output to stdout
+# Compatibility form (also outputs to stdout)
 sarra crypto hash sha256 "data" -y
 sarra crypto base64 "data" -y
 sarra crypto aes-encrypt "data" -y
+
+# Prompt for a save location
+sarra crypto hash sha256 "data" --save
 
 # Write directly to file (skips prompt)
 sarra crypto hash sha256 "data" -o hash.txt
@@ -158,7 +161,7 @@ sarra crypto hash sha256 "secret" -o ./output/hashes/secret.txt
 
 ## Interactive Mode
 
-By default, commands will prompt you before saving to a file:
+Commands print to stdout by default. Use `--save` to open the save prompt:
 
 ```
 📁 Save Location
@@ -175,10 +178,12 @@ Save to file? (Y/n/path):
 - Type 'n' → Output to stdout (terminal)
 - Type a path → Save to custom location
 
-**Skip the prompt:**
+**Output controls:**
 
-- Use `-y` flag to output directly to stdout
+- No flag is needed for stdout output
+- Use `--save` to prompt for a location
 - Use `-o/--out` flag to save directly to a file
+- `-y/--yes` remains as a compatibility flag for stdout
 
 ## Algorithms
 
@@ -237,7 +242,8 @@ Arguments:
 
 Options:
   -o, --out <file>    Write output to a file (skips prompt)
-  -y, --yes           Skip prompt and output to stdout
+  --save               Prompt for a save location
+  -y, --yes           Compatibility flag for stdout
 ```
 
 ### `base64`
@@ -251,7 +257,8 @@ Arguments:
 Options:
   -d, --decode        Decode base64 instead of encode
   -o, --out <file>    Write output to a file (skips prompt)
-  -y, --yes           Skip prompt and output to stdout
+  --save               Prompt for a save location
+  -y, --yes           Compatibility flag for stdout
 ```
 
 ### `aes-encrypt`
@@ -265,7 +272,8 @@ Arguments:
 Options:
   -k, --key <key>     Encryption key (hex, 32 bytes). Auto-generated if omitted
   -o, --out <file>    Write output to a file (skips prompt)
-  -y, --yes           Skip prompt and output to stdout
+  --save               Prompt for a save location
+  -y, --yes           Compatibility flag for stdout
 ```
 
 ### `aes-decrypt`
@@ -281,7 +289,8 @@ Options:
   -i, --iv <iv>       Initialization vector (hex, 16 bytes) [required]
   -t, --tag <tag>     Auth tag (hex, 16 bytes) [required]
   -o, --out <file>    Write output to a file (skips prompt)
-  -y, --yes           Skip prompt and output to stdout
+  --save               Prompt for a save location
+  -y, --yes           Compatibility flag for stdout
 ```
 
 ### `rsa-keygen`
@@ -292,7 +301,8 @@ sarra crypto rsa-keygen [options]
 Options:
   -s, --size <bits>   Key size in bits (2048, 3072, 4096) [default: 2048]
   -o, --out <dir>     Output directory (skips prompt)
-  -y, --yes           Skip prompt and output to stdout
+  --save               Prompt for an output directory
+  -y, --yes           Compatibility flag for stdout
 ```
 
 ### `rsa-encrypt`
@@ -306,7 +316,8 @@ Arguments:
 Options:
   -p, --public-key <file>    Path to public key file (PEM) [required]
   -o, --out <file>           Write output to a file (skips prompt)
-  -y, --yes                  Skip prompt and output to stdout
+  --save                      Prompt for a save location
+  -y, --yes                  Compatibility flag for stdout
 ```
 
 ### `rsa-decrypt`
@@ -320,7 +331,8 @@ Arguments:
 Options:
   -k, --private-key <file>   Path to private key file (PEM) [required]
   -o, --out <file>           Write output to a file (skips prompt)
-  -y, --yes                  Skip prompt and output to stdout
+  --save                      Prompt for a save location
+  -y, --yes                  Compatibility flag for stdout
 ```
 
 ## Notes
@@ -329,7 +341,8 @@ Options:
 - If no input argument is provided, input is read from stdin
 - Hash output is always hexadecimal
 - Base64 encoding is standard (not URL-safe)
-- Without `-o` or `-y` flags, you'll be prompted for save location
+- Commands print to stdout unless `--save` or `-o/--out` is used
+- The save-location prompt appears only with `--save`
 - Directories are created automatically when using `-o/--out`
 - Use SHA-256 or SHA-512 for security-sensitive applications
 - AES keys must be exactly 32 bytes (64 hexadecimal characters)

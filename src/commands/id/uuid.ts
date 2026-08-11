@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import { uuidV7 } from "./versions/uuidv7/generateUUID";
 import chalk from "chalk";
-import { getSaveLocation } from "../../prompts/prompt-user";
+import { resolveOutputPath } from "../../utils/output";
 
 export const uuidCommand = new Command("uuid")
   .description("Generate UUIDs (v4 by default, v7 supported)")
@@ -15,8 +15,9 @@ export const uuidCommand = new Command("uuid")
   )
   .option("-c, --count <number>", "How many UUIDs", "1")
   .option("-o, --out <file>", "Write output to a file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async function ({ uuidVersion, count, out, yes }) {
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async function ({ uuidVersion, count, out, save }) {
     const parentOpts = this.parent?.opts() as { format?: string };
     const format = parentOpts?.format ?? "text";
 
@@ -47,19 +48,8 @@ export const uuidCommand = new Command("uuid")
     }
 
     // Determine output method
-    let outputPath: string | null;
-
-    if (out) {
-      // User provided -o flag, use it directly
-      outputPath = out;
-    } else if (yes) {
-      // User used -y flag, output to stdout
-      outputPath = null;
-    } else {
-      // Ask user
-      const defaultFilename = format === "json" ? "uuids.json" : "uuids.txt";
-      outputPath = await getSaveLocation(defaultFilename);
-    }
+    const defaultFilename = format === "json" ? "uuids.json" : "uuids.txt";
+    const outputPath = await resolveOutputPath(out, save, defaultFilename);
 
     if (outputPath) {
       // Save to file

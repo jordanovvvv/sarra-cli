@@ -2,8 +2,8 @@ import { Command } from "commander";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
-import { getSaveLocation } from "../../prompts/prompt-user";
 import chalk from "chalk";
+import { resolveOutputPath } from "../../utils/output";
 
 export const randomCommand = new Command("random")
   .description("Generate cryptographically secure random tokens")
@@ -14,8 +14,9 @@ export const randomCommand = new Command("random")
   )
   .option("-c, --count <number>", "How many tokens to generate", "1")
   .option("-o, --out <file>", "Write output to a file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async function ({ length, count, out, yes }) {
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async function ({ length, count, out, save }) {
     const parentOpts = this.parent?.opts() as { format?: string };
     const format = parentOpts?.format ?? "text";
 
@@ -58,19 +59,8 @@ export const randomCommand = new Command("random")
     }
 
     // Determine output method
-    let outputPath: string | null;
-
-    if (out) {
-      // User provided -o flag, use it directly
-      outputPath = out;
-    } else if (yes) {
-      // User used -y flag, output to stdout
-      outputPath = null;
-    } else {
-      // Ask user
-      const defaultFilename = format === "json" ? "tokens.json" : "tokens.txt";
-      outputPath = await getSaveLocation(defaultFilename);
-    }
+    const defaultFilename = format === "json" ? "tokens.json" : "tokens.txt";
+    const outputPath = await resolveOutputPath(out, save, defaultFilename);
 
     if (outputPath) {
       // Save to file

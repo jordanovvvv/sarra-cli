@@ -10,14 +10,15 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const generateUUID_1 = require("./versions/uuidv7/generateUUID");
 const chalk_1 = __importDefault(require("chalk"));
-const prompt_user_1 = require("../../prompts/prompt-user");
+const output_1 = require("../../utils/output");
 exports.uuidCommand = new commander_1.Command("uuid")
     .description("Generate UUIDs (v4 by default, v7 supported)")
     .option("--uuid-version <version>", "UUID version to generate (v4 | v7)", "v4")
     .option("-c, --count <number>", "How many UUIDs", "1")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async function ({ uuidVersion, count, out, yes }) {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async function ({ uuidVersion, count, out, save }) {
     const parentOpts = this.parent?.opts();
     const format = parentOpts?.format ?? "text";
     const uuids = [];
@@ -45,20 +46,8 @@ exports.uuidCommand = new commander_1.Command("uuid")
             break;
     }
     // Determine output method
-    let outputPath;
-    if (out) {
-        // User provided -o flag, use it directly
-        outputPath = out;
-    }
-    else if (yes) {
-        // User used -y flag, output to stdout
-        outputPath = null;
-    }
-    else {
-        // Ask user
-        const defaultFilename = format === "json" ? "uuids.json" : "uuids.txt";
-        outputPath = await (0, prompt_user_1.getSaveLocation)(defaultFilename);
-    }
+    const defaultFilename = format === "json" ? "uuids.json" : "uuids.txt";
+    const outputPath = await (0, output_1.resolveOutputPath)(out, save, defaultFilename);
     if (outputPath) {
         // Save to file
         const filePath = path_1.default.resolve(outputPath);

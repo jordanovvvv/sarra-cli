@@ -2,7 +2,7 @@ import { Command } from "commander";
 import forge from "node-forge";
 import fs from "fs";
 import chalk from "chalk";
-import { getSaveLocation } from "../../prompts/prompt-user";
+import { getSaveDirectory } from "../../prompts/prompt-user";
 import { promisify } from "util";
 import { exec, spawn } from "child_process";
 import { readmeTemplate } from "./generate-ssl-readme";
@@ -20,13 +20,16 @@ try {
   helpText = "";
 }
 
-export const sslCommands = new Command("ssl");
+export const sslCommands = new Command("ssl")
+  .description("SSL certificate generation and management")
+  .addHelpText("after", `\n${prettyHelp(helpText)}`);
 
 sslCommands
   .command("generate")
   .description("Generate a SSL certificate")
-  .addHelpText("after", `\n${prettyHelp(helpText)}`)
   .option("-d, --domain <domain>", "Domain name", "localhost")
+  .option("-o, --out <dir>", "Write certificate files to a directory")
+  .option("--save", "Prompt for an output directory", false)
   .option(
     "--val, --validity <days>",
     "Validity period (max 365)",
@@ -37,22 +40,10 @@ sslCommands
     365
   )
   .action(async (options) => {
-    const { domain, validity } = options;
+    const { domain, validity, out, save } = options;
 
-    // 1. Determine Save Path interactively
-    const defaultFileName = `${domain}.crt`;
-    const targetPath = await getSaveLocation(defaultFileName);
-
-    if (!targetPath) {
-      console.log(chalk.yellow("Operation cancelled by user."));
-      return;
-    }
-
-    // Determine directory and filenames
-    const outDir =
-      targetPath.endsWith(".crt") || targetPath.endsWith(".key")
-        ? "./certs"
-        : targetPath;
+    // Prompt only when explicitly requested. Otherwise print PEM to stdout.
+    const outDir = out ?? (save ? await getSaveDirectory("./certs") : null);
 
     console.log(
       chalk.blue(`\nGenerating cert for ${domain} (${validity} days)...`)
@@ -81,11 +72,19 @@ sslCommands
 
     cert.sign(keys.privateKey, forge.md.sha256.create());
 
-    // 3. Final Write
-    if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
-
     const pemKey = forge.pki.privateKeyToPem(keys.privateKey);
     const pemCert = forge.pki.certificateToPem(cert);
+
+    if (!outDir) {
+      console.log("=== CERTIFICATE ===");
+      console.log(pemCert.trim());
+      console.log("\n=== PRIVATE KEY ===");
+      console.log(pemKey.trim());
+      return;
+    }
+
+    // 3. Final Write
+    if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
     fs.writeFileSync(`${outDir}/${domain}.key`, pemKey);
     fs.writeFileSync(`${outDir}/${domain}.crt`, pemCert);

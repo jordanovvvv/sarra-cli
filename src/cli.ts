@@ -16,7 +16,7 @@ const program = new Command();
 program
   .name("sarra")
   .description("Daily developer ability enhancement tools")
-  .version("0.3.10", "-v, --version", "Display the current version")
+  .version("0.4.0", "-v, --version", "Display the current version")
   .showHelpAfterError()
   .helpOption("-h, --help", "Display help for command");
 
@@ -39,7 +39,7 @@ ${chalk.bold.cyan("EXAMPLES")}
   ${chalk.green("sarra id uuid")}
   ${chalk.green("sarra id random --length 32")}
   ${chalk.green("sarra time now")}
-  ${chalk.green("sarra data json-pretty file.json")}
+  ${chalk.green("sarra data json format file.json")}
   ${chalk.green("sarra crypto hash sha256 'my secret'")}
   ${chalk.green("sarra crypto aes-encrypt 'secret message'")}
   ${chalk.green("sarra crypto aes-decrypt <data> -k <key> -i <iv> -t <tag>")}
@@ -47,8 +47,8 @@ ${chalk.bold.cyan("EXAMPLES")}
   ${chalk.green("sarra crypto rsa-encrypt 'message' -p public_key.pem")}
   ${chalk.green("sarra crypto rsa-decrypt <data> -k private_key.pem")}
   ${chalk.green("sarra qr generate 'Hello World'")}
-  ${chalk.green("sarra crypto ssl generate --domain example.com --validity 90")}
-  ${chalk.green("sarra crypto ssl generate --domain myapp.local")}
+  ${chalk.green("sarra ssl generate --domain example.com --validity 90")}
+  ${chalk.green("sarra ssl generate --domain myapp.local")}
   ${chalk.green("sarra geo my-ip --ipv4")}
   ${chalk.green("sarra geo lookup <ip-address>")}
 

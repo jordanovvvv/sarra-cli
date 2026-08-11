@@ -44,38 +44,44 @@ sarra ssl generate [options]
 | ------------------- | ------- | ---------------------------------------------------------------------------------- | ----------- |
 | `--domain <domain>` | `-d`    | Domain name for the certificate (used as Common Name and Subject Alternative Name) | `localhost` |
 | `--validity <days>` | `--val` | Certificate validity period in days (maximum 365)                                  | `365`       |
+| `--out <dir>`       | `-o`    | Write the certificate bundle directly to a directory                               | -           |
+| `--save`            | -       | Prompt for an output directory                                                      | -           |
 
 ### Example Commands
 
 **Generate a certificate for localhost:**
 
 ```bash
-sarra ssl generate
+sarra ssl generate --save
 ```
 
 **Generate a certificate for a custom domain:**
 
 ```bash
-sarra ssl generate --domain example.local
+sarra ssl generate --domain example.local --save
 ```
 
 **Generate a certificate valid for 90 days:**
 
 ```bash
-sarra ssl generate --domain example.local --validity 90
+sarra ssl generate --domain example.local --validity 90 --save
 ```
 
 ### Output Files
 
-The command generates two files:
+By default, the command prints the certificate and private key PEM blocks to
+stdout. Use `--save` to prompt for an output directory (default `./certs`), or
+use `-o/--out <dir>` to save directly. Saving generates three files:
 
 - `<domain>.key` — Private key (PEM format)
 - `<domain>.crt` — Self-signed certificate (PEM format)
+- `README.md` — Certificate usage and installation instructions
 
 **Example:**
 
 - `localhost.key`
 - `localhost.crt`
+- `README.md`
 
 ### Certificate Specifications
 
@@ -297,7 +303,7 @@ Check firewall rules and ensure no other service is using port 80 when using `--
 
 ### "Let's Encrypt doesn't work with localhost"
 
-Use `sarra ssl generate` for local development instead.
+Use `sarra ssl generate --save` for local development instead.
 
 ---
 
@@ -305,7 +311,7 @@ Use `sarra ssl generate` for local development instead.
 
 | Use Case                    | Command                                                                          |
 | --------------------------- | -------------------------------------------------------------------------------- |
-| Local HTTPS development     | `sarra ssl generate`                                                             |
+| Local HTTPS development     | `sarra ssl generate --save`                                                      |
 | Production website          | `sarra ssl letsencrypt -d example.com -e you@example.com --standalone`           |
 | Testing Let's Encrypt setup | `sarra ssl letsencrypt -d example.com -e you@example.com --standalone --staging` |
-| Custom local domain         | `sarra ssl generate --domain myapp.local`                                        |
+| Custom local domain         | `sarra ssl generate --domain myapp.local --save`                                 |

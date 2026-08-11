@@ -90,16 +90,16 @@ Convert to CSV
 
 OUTPUT MANAGEMENT
 
-Interactive prompt (default behavior)
+Output to stdout (default behavior)
 
-    # Will prompt for save location
+    # Prints to stdout
     sarra data json format data.json
     sarra data json query "user.name" data.json
 
-Skip prompt and output to stdout
+Prompt for a save location
 
-    sarra data json format data.json -y
-    sarra data json minify data.json -y
+    sarra data json format data.json --save
+    sarra data json minify data.json --save
 
 Save directly to file (skips prompt)
 
@@ -112,7 +112,7 @@ Custom paths with nested directories (auto-created)
 
 INTERACTIVE MODE
 
-By default, most commands will prompt you before saving to a file:
+Commands print to stdout by default. Use `--save` to open the save prompt:
 
     📁 Save Location
        Current directory: /home/user/projects
@@ -126,9 +126,11 @@ Options:
 • Type 'n' → Output to stdout (terminal)
 • Type a path → Save to custom location
 
-Skip the prompt:
-• Use -y flag to output directly to stdout
-• Use -o/--out flag to save directly to a file
+Output controls:
+• No flag is needed for stdout output
+• Use --save to prompt for a location
+• Use -o/--out to save directly to a file
+• -y/--yes remains as a compatibility flag for stdout
 
 Exception: validate command always outputs to stdout (no prompt)
 
@@ -145,7 +147,8 @@ OPTIONS
 Common options for most commands:
 
     -o, --out <file>        Write output to a file (skips prompt)
-    -y, --yes               Skip prompt and output to stdout
+    --save                   Prompt for a save location
+    -y, --yes               Compatibility flag for stdout
 
 Format command only:
 
@@ -160,7 +163,8 @@ NOTES
 • to-csv requires input to be an array of objects
 • CSV output properly escapes commas and quotes
 • All commands support piping and shell workflows
-• Without -o or -y flags, you'll be prompted for save location
+• Commands print to stdout unless --save or -o/--out is used
+• The save-location prompt appears only with --save
 • Directories are created automatically when using -o/--out
 • validate command always outputs to stdout (no file save)
 

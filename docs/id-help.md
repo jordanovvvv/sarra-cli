@@ -46,13 +46,16 @@ Output formats
 
 Writing output to files
 
-    # Interactive prompt (default behavior)
+    # Output to stdout (default behavior)
     sarra id uuid --count 3
     sarra id random --length 32 --count 5
 
-    # Skip prompt and output to stdout
+    # Compatibility form (also outputs to stdout)
     sarra id uuid --count 3 -y
     sarra id random --length 32 -y
+
+    # Prompt for a save location
+    sarra id uuid --count 3 --save
 
     # Write directly to file (skips prompt)
     sarra id uuid --count 3 --out uuids.txt
@@ -64,7 +67,7 @@ Writing output to files
 
 INTERACTIVE MODE
 
-By default, commands will prompt you before saving to a file:
+Commands print to stdout by default. Use `--save` to open the save prompt:
 
     📁 Save Location
        Current directory: /home/user/projects
@@ -78,15 +81,18 @@ Options:
 • Type 'n' → Output to stdout (terminal)
 • Type a path → Save to custom location
 
-Skip the prompt:
-• Use -y flag to output directly to stdout
-• Use -o/--out flag to save directly to a file
+Output controls:
+• No flag is needed for stdout output
+• Use --save to prompt for a location
+• Use -o/--out to save directly to a file
+• -y/--yes remains as a compatibility flag for stdout
 
 NOTES
 
 • Global options must appear BEFORE the subcommand
 • Subcommands may define additional options (e.g. --count, --out)
-• Without -o or -y flags, you'll be prompted for save location
+• Without output flags, results are printed to stdout
+• The save-location prompt appears only with --save
 • Directories are created automatically when using -o/--out
 • UUID v7 is recommended for databases and ordered indexes
 

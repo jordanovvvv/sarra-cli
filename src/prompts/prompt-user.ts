@@ -43,3 +43,31 @@ export async function getSaveLocation(
     return answer; // Use custom path
   }
 }
+
+export async function getSaveDirectory(
+  defaultDirectory: string
+): Promise<string | null> {
+  const cwd = process.cwd();
+  const fullPath = path.resolve(cwd, defaultDirectory);
+
+  console.log(chalk.cyan("\n📁 Output Directory"));
+  console.log(chalk.gray(`   Current directory: ${cwd}`));
+  console.log(chalk.gray(`   Default directory: ${defaultDirectory}`));
+  console.log(chalk.gray(`   Full path: ${fullPath}\n`));
+
+  const answer = await promptUser(`Use this output directory? (Y/n/path): `);
+
+  if (answer.toLowerCase() === "n" || answer.toLowerCase() === "no") {
+    return null;
+  }
+
+  if (
+    answer === "" ||
+    answer.toLowerCase() === "y" ||
+    answer.toLowerCase() === "yes"
+  ) {
+    return defaultDirectory;
+  }
+
+  return answer;
+}

@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Released version v0.4.0]
+
+<details open>
+<summary><h2>[0.4.0] - 2026-08-11</h2></summary>
+
+### Added
+
+- Added `--save` to commands that support file output, making the interactive save-location prompt explicitly opt-in.
+- Added shared output-path resolution and timestamp parsing utilities.
+- Added regression coverage for CLI help, documentation examples, stdout defaults, stdin pipelines, IP validation, QR generation, SSL output, and time commands.
+- Added IPv6 validation through Node.js IP parsing.
+
+### Changed
+
+- **BREAKING:** Commands now print to stdout by default instead of opening a save-location prompt.
+- `-o/--out` continues to save directly without prompting; `-y/--yes` remains available as a compatibility flag.
+- QR generation now previews ASCII output in the terminal by default and saves only when requested.
+- SSL generation now prints the certificate and private key as PEM by default; use `--save` or `-o/--out` to create certificate files.
+- Time difference commands now accept an optional second timestamp and consistently parse ISO, Unix-second, and Unix-millisecond values.
+
+### Fixed
+
+- Corrected crypto and geo format option handling.
+- Corrected stale root help examples for JSON and SSL commands.
+- Fixed stdin handling for piped crypto and JSON input.
+- Fixed QR nested-directory output and `--no-small` terminal rendering.
+- Fixed IPv6 validation and SSL output-directory handling.
+- Reconciled displayed documentation examples with commands that actually execute.
+
+### Documentation
+
+- Updated the README and command-group guides for stdout-first output, `--save`, direct file output, and current command syntax.
+- Regenerated the VHS CLI demo with deterministic, working `sarra` examples.
+
+</details>
+
+---
+
 ## [Released version v0.3.9]
 
 <details open>

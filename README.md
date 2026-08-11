@@ -46,8 +46,8 @@ sarra qr generate "Hello World"
 # Get current timestamp
 sarra time now
 
-# Generate SSL certificate for local development
-sarra ssl generate
+# Generate and save an SSL certificate for local development
+sarra ssl generate --save
 ```
 
 ## Command Groups
@@ -55,10 +55,10 @@ sarra ssl generate
 - **[`id`](#id---identifiers-tokens-and-uuids)** - Identifiers, tokens, UUIDs ([detailed docs](./docs/id-help.md))
 - **[`crypto`](#crypto---cryptography-utilities)** - Cryptography utilities ([detailed docs](./docs/crypto-help.md))
 - **[`data`](#data---data-encoding-and-formatting)** - Data encoding and formatting ([detailed docs](./docs/data-help.md))
-- **[`qr`](#qr---qr-code-generation)** - QR code generation ([detailed docs](./docs/qr-help.md))
+- **[`qr`](#qr---qr-code-generation)** - QR code generation ([detailed docs](./docs/qrcode-help.md))
 - **[`time`](#time---date-and-time-utilities)** - Date and time utilities ([detailed docs](./docs/time-help.md))
 - **[`ssl`](#ssl---ssl-certificate-generation)** - SSL certificate generation ([detailed docs](./docs/ssl-help.md))
-- **[`ssl`](#geo---geo-and-ip-location-utilization)** - Geolocation and IP location utilities ([detailed docs](./docs/geo-help.md))
+- **[`geo`](#geolocation-and-ip-utilities)** - Geolocation and IP location utilities ([detailed docs](./docs/geo-help.md))
 
 Use `--help` on any command for more details:
 
@@ -67,7 +67,9 @@ sarra --help
 sarra id --help
 sarra crypto --help
 sarra qr --help
+sarra time --help
 sarra ssl --help
+sarra geo --help
 ```
 
 ---
@@ -102,9 +104,9 @@ sarra id uuid --count 10 -o uuids.txt
 sarra id --format json uuid --uuid-version v7 -o uuids.json
 ```
 
-### Interactive Mode
+### Saving Output
 
-Commands will prompt before saving:
+Commands print to stdout by default. Add `--save` to open the save prompt:
 
 ```
 📁 Save Location
@@ -118,7 +120,9 @@ Save to file? (Y/n/path):
 - Press Enter or `y` → Save to default location
 - Type `n` → Output to stdout
 - Type a path → Save to custom location
-- Use `-y` flag to skip prompt and output to stdout
+- No flag is needed for stdout output
+- Use `--save` to open the prompt
+- `-y` remains accepted as a compatibility flag for stdout
 - Use `-o <file>` flag to save directly without prompt
 
 ---
@@ -197,16 +201,18 @@ sarra crypto rsa-decrypt <base64-data> -k private_key.pem
 ### Output Options
 
 ```bash
-# Interactive prompt (default)
+# Output to stdout (default)
 sarra crypto hash sha256 "data"
 
-# Output to stdout
-sarra crypto hash sha256 "data" -y
+# Prompt for a save location
+sarra crypto hash sha256 "data" --save
 
 # Save to file
 sarra crypto hash sha256 "data" -o hash.txt
 sarra crypto --format json aes-encrypt "data" -o encrypted.json
 ```
+
+Crypto commands always write to stdout unless `--save` or `-o/--out` is used.
 
 ## Supported Algorithms
 
@@ -231,7 +237,8 @@ sarra crypto hash <algorithm> [input] [options]
 
 Options:
   -o, --out <file>    Write output to file
-  -y, --yes           Output to stdout
+  --save               Prompt for a save location
+  -y, --yes           Compatibility flag for stdout
 ```
 
 ### `base64`
@@ -242,7 +249,8 @@ sarra crypto base64 [input] [options]
 Options:
   -d, --decode        Decode instead of encode
   -o, --out <file>    Write output to file
-  -y, --yes           Output to stdout
+  --save               Prompt for a save location
+  -y, --yes           Compatibility flag for stdout
 ```
 
 ### `aes-encrypt`
@@ -253,7 +261,8 @@ sarra crypto aes-encrypt [input] [options]
 Options:
   -k, --key <key>     Encryption key (hex, 32 bytes)
   -o, --out <file>    Write output to file
-  -y, --yes           Output to stdout
+  --save               Prompt for a save location
+  -y, --yes           Compatibility flag for stdout
 ```
 
 ### `aes-decrypt`
@@ -266,7 +275,8 @@ Options:
   -i, --iv <iv>       Initialization vector (required)
   -t, --tag <tag>     Auth tag (required)
   -o, --out <file>    Write output to file
-  -y, --yes           Output to stdout
+  --save               Prompt for a save location
+  -y, --yes           Compatibility flag for stdout
 ```
 
 ### `rsa-keygen`
@@ -277,7 +287,8 @@ sarra crypto rsa-keygen [options]
 Options:
   -s, --size <bits>   Key size: 2048, 3072, 4096 (default: 2048)
   -o, --out <dir>     Output directory
-  -y, --yes           Output to stdout
+  --save               Prompt for an output directory
+  -y, --yes           Compatibility flag for stdout
 ```
 
 ### `rsa-encrypt`
@@ -288,7 +299,8 @@ sarra crypto rsa-encrypt [input] [options]
 Options:
   -p, --public-key <file>    Public key file (required)
   -o, --out <file>           Write output to file
-  -y, --yes                  Output to stdout
+  --save                      Prompt for a save location
+  -y, --yes                  Compatibility flag for stdout
 ```
 
 ### `rsa-decrypt`
@@ -299,7 +311,8 @@ sarra crypto rsa-decrypt [input] [options]
 Options:
   -k, --private-key <file>   Private key file (required)
   -o, --out <file>           Write output to file
-  -y, --yes                  Output to stdout
+  --save                      Prompt for a save location
+  -y, --yes                  Compatibility flag for stdout
 ```
 
 ## Security Notes
@@ -382,6 +395,9 @@ sarra qr generate "Data" -t
 # Quick ASCII preview (no file)
 sarra qr terminal "Quick check"
 
+# Full-size terminal rendering (compact is the default)
+sarra qr terminal "Quick check" --no-small
+
 # Generate from URL
 sarra qr url https://github.com
 
@@ -423,6 +439,10 @@ Date and time utilities for scripting, logging, and debugging.
 ### Commands
 
 - `now` - Print the current timestamp
+- `convert` (`conv`) - Convert between ISO and Unix timestamp formats
+- `add` - Add or subtract time
+- `diff` - Calculate the difference between two timestamps
+- `parse` - Parse and validate a timestamp
 
 ### Quick Examples
 
@@ -470,14 +490,14 @@ SSL/TLS certificate generation for local development and production environments
 ### Quick Examples
 
 ```bash
-# Generate self-signed certificate for localhost
+# Print a self-signed certificate and private key as PEM
 sarra ssl generate
 
-# Generate for custom local domain
-sarra ssl generate --domain myapp.local
+# Generate and save for a custom local domain
+sarra ssl generate --domain myapp.local --save
 
-# Generate with custom validity period
-sarra ssl generate --domain dev.example.com --validity 90
+# Save directly to a directory with a custom validity period
+sarra ssl generate --domain dev.example.com --validity 90 -o ./certs
 
 # Get Let's Encrypt certificate (standalone mode)
 sarra ssl letsencrypt -d example.com -e admin@example.com --standalone
@@ -512,7 +532,8 @@ sarra ssl letsencrypt -d example.com -e admin@example.com --standalone --staging
 - **Key Algorithm:** RSA 2048-bit
 - **Signature Algorithm:** SHA-256
 - **Validity:** Up to 365 days
-- **Output:** `.crt` and `.key` files in PEM format
+- **Default output:** Certificate and private-key PEM blocks on stdout
+- **Saved output:** `.crt`, `.key`, and `README.md` in the `--save`/`--out` directory
 
 ### Prerequisites for Let's Encrypt
 
@@ -557,9 +578,10 @@ sudo update-ca-certificates
 
 ---
 
-## Interactive Mode
+## Output and Saving
 
-Most commands support an interactive mode that prompts you before saving files:
+Commands print to stdout by default. Use `--save` when you want an interactive
+save-location prompt:
 
 ```
 📁 Save Location
@@ -576,21 +598,26 @@ Save to file? (Y/n/path):
 - Type **n** → Output to stdout (terminal)
 - Type a **custom path** → Save to specified location
 
-**Skip the prompt:**
+**Output controls:**
 
-- Use **`-y`** flag to output directly to stdout
+- Use no flag for stdout output
+- Use **`--save`** to open the save prompt
 - Use **`-o <file>`** flag to save directly to a file
+- **`-y`** remains accepted as a compatibility flag for stdout; QR retains its
+  legacy `-y` behavior of saving to the default image path
+
+Shell pipelines do not require `-y`.
 
 **Examples:**
 
 ```bash
-# Interactive (will prompt)
+# Output to stdout (default)
 sarra id uuid --count 5
 
-# Skip prompt, output to stdout
-sarra id uuid --count 5 -y
+# Open the save prompt
+sarra id uuid --count 5 --save
 
-# Skip prompt, save to file
+# Save directly to a file
 sarra id uuid --count 5 -o uuids.txt
 
 # Custom nested path (auto-creates directories)
@@ -624,7 +651,7 @@ sarra data json validate data.json && sarra data json query "users" data.json
 sarra id uuid --count 100 -o uuids.txt
 sarra crypto hash sha256 "data" -o hash.txt
 sarra qr generate "https://example.com" -o qr.png
-sarra ssl generate --domain myapp.local
+sarra ssl generate --domain myapp.local -o ./certs
 
 # Nested directories (auto-created)
 sarra id random --length 32 -o ./secrets/tokens/api-key.txt
@@ -728,7 +755,8 @@ All commands support --format json for programmatic usage
 - Global options like `--format` must appear **before** the subcommand
 - Many commands support reading from **stdin** for pipeline operations
 - Directories are **automatically created** when using `-o/--out`
-- Use **`-y`** flag to skip interactive prompts and output to stdout
+- Commands output to stdout by default
+- Use **`--save`** to open an interactive save-location prompt
 - Use **`-o`** flag to save directly to a file without prompts
 - SSL certificates are **zero-dependency** - no OpenSSL installation required
 
@@ -741,7 +769,7 @@ Detailed documentation for each command group:
 - [ID Commands (UUID, Random Tokens)](./docs/id-help.md)
 - [Crypto Commands (Hash, Base64)](./docs/crypto-help.md)
 - [Data Commands (JSON utilities)](./docs/data-help.md)
-- [QR Code Commands](./docs/qr-help.md)
+- [QR Code Commands](./docs/qrcode-help.md)
 - [Time Commands](./docs/time-help.md)
 - [SSL Commands (Certificate Generation)](./docs/ssl-help.md)
 - [Geo and IP Commands](./docs/geo-help.md)
@@ -763,7 +791,7 @@ echo "mypassword" | sarra crypto hash sha256
 curl https://api.example.com/users | sarra data json format
 
 # Setup local HTTPS development
-sarra ssl generate --domain localhost
+sarra ssl generate --domain localhost --save
 ```
 
 ### Configuration
@@ -806,15 +834,15 @@ sarra data json format raw.json | sarra data json validate
 
 ```bash
 # Local development environment
-sarra ssl generate --domain localhost
-sarra ssl generate --domain myapp.local --validity 180
+sarra ssl generate --domain localhost --save
+sarra ssl generate --domain myapp.local --validity 180 --save
 
 # Production website deployment
 sarra ssl letsencrypt -d example.com -e admin@example.com --standalone
 
 # Multiple environments
-sarra ssl generate --domain dev.myapp.local
-sarra ssl generate --domain staging.myapp.local
+sarra ssl generate --domain dev.myapp.local --save
+sarra ssl generate --domain staging.myapp.local --save
 sarra ssl letsencrypt -d myapp.com -e ops@myapp.com --webroot /var/www/html
 ```
 
@@ -875,7 +903,7 @@ echo "Build started: $(sarra time now)" >> build.log
 
 **"Let's Encrypt doesn't work with localhost"**
 
-- Use `sarra ssl generate` for local development instead
+- Use `sarra ssl generate --save` for local development instead
 
 **"Domain must point to this server's IP"**
 

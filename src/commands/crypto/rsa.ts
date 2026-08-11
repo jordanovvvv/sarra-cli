@@ -3,16 +3,17 @@ import { Command } from "commander";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
-import { getSaveLocation } from "../../prompts/prompt-user";
 import { readStdin } from "../../utils/stdin";
+import { resolveOutputPath } from "../../utils/output";
 
 // RSA Key Generation Command
 export const rsaKeygenCommand = new Command("rsa-keygen")
   .description("Generate RSA key pair")
   .option("-s, --size <bits>", "Key size in bits (2048, 3072, 4096)", "2048")
   .option("-o, --out <dir>", "Output directory (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async function ({ size, out, yes }) {
+  .option("--save", "Prompt for an output directory", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async function ({ size, out, save }) {
     const keySize = parseInt(size);
 
     if (![2048, 3072, 4096].includes(keySize)) {
@@ -36,23 +37,15 @@ export const rsaKeygenCommand = new Command("rsa-keygen")
       },
     });
 
-    if (yes) {
+    const outputDir = await resolveOutputPath(out, save, "./keys");
+
+    if (!outputDir) {
       // Output to stdout
       console.log("=== PUBLIC KEY ===");
       console.log(publicKey);
       console.log("\n=== PRIVATE KEY ===");
       console.log(privateKey);
     } else {
-      // Determine output directory
-      let outputDir: string | null;
-
-      if (out) {
-        outputDir = out;
-      } else {
-        const defaultDir = "./keys";
-        outputDir = await getSaveLocation(defaultDir);
-      }
-
       if (outputDir) {
         const dir = path.resolve(outputDir);
         fs.mkdirSync(dir, { recursive: true });
@@ -81,8 +74,9 @@ export const rsaEncryptCommand = new Command("rsa-encrypt")
   .argument("[input]", "Input string to encrypt (reads from stdin if omitted)")
   .requiredOption("-p, --public-key <file>", "Path to public key file (PEM)")
   .option("-o, --out <file>", "Write output to a file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async function (input, { publicKey, out, yes }) {
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async function (input, { publicKey, out, save }) {
     // Get input data
     const data = input ?? (await readStdin());
 
@@ -113,15 +107,7 @@ export const rsaEncryptCommand = new Command("rsa-encrypt")
     const output = encrypted.toString("base64");
 
     // Determine output method
-    let outputPath: string | null;
-
-    if (out) {
-      outputPath = out;
-    } else if (yes) {
-      outputPath = null;
-    } else {
-      outputPath = await getSaveLocation("encrypted.txt");
-    }
+    const outputPath = await resolveOutputPath(out, save, "encrypted.txt");
 
     if (outputPath) {
       const filePath = path.resolve(outputPath);
@@ -143,8 +129,9 @@ export const rsaDecryptCommand = new Command("rsa-decrypt")
   .argument("[input]", "Encrypted data (base64) (reads from stdin if omitted)")
   .requiredOption("-k, --private-key <file>", "Path to private key file (PEM)")
   .option("-o, --out <file>", "Write output to a file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async function (input, { privateKey, out, yes }) {
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async function (input, { privateKey, out, save }) {
     // Get input data
     const encryptedData = input ?? (await readStdin());
 
@@ -176,15 +163,7 @@ export const rsaDecryptCommand = new Command("rsa-decrypt")
       const output = decrypted.toString("utf8");
 
       // Determine output method
-      let outputPath: string | null;
-
-      if (out) {
-        outputPath = out;
-      } else if (yes) {
-        outputPath = null;
-      } else {
-        outputPath = await getSaveLocation("decrypted.txt");
-      }
+      const outputPath = await resolveOutputPath(out, save, "decrypted.txt");
 
       if (outputPath) {
         const filePath = path.resolve(outputPath);

@@ -3,6 +3,7 @@ import chalk from "chalk";
 import path from "path";
 import fs from "fs";
 import { prettyHelp } from "../../help/prettyHelp";
+import { parseTimestamp } from "./parse-timestamp";
 
 const helpPath = path.resolve(__dirname, "../../docs/time-help.md");
 
@@ -13,9 +14,9 @@ try {
   helpText = "";
 }
 
-export const timeCommands = new Command("time").description(
-  "Date and time utilities"
-);
+export const timeCommands = new Command("time")
+  .description("Date and time utilities")
+  .addHelpText("after", `\n${prettyHelp(helpText)}`);
 
 // Current timestamp
 timeCommands
@@ -28,7 +29,6 @@ timeCommands
     "Custom output format (iso | date | time | locale)",
     "iso"
   )
-  .addHelpText("after", `\n${prettyHelp(helpText)}`)
   .action(({ unix, ms, format }) => {
     const now = new Date();
 
@@ -77,21 +77,7 @@ timeCommands
   )
   .action((timestamp, { to }) => {
     try {
-      let date: Date;
-
-      // Determine input format and parse
-      if (/^\d+$/.test(timestamp)) {
-        const num = parseInt(timestamp, 10);
-        // If less than 10 billion, assume seconds; otherwise milliseconds
-        date = num < 10000000000 ? new Date(num * 1000) : new Date(num);
-      } else {
-        date = new Date(timestamp);
-      }
-
-      if (isNaN(date.getTime())) {
-        console.error(chalk.red("✗ Invalid timestamp"));
-        process.exit(1);
-      }
+      const date = parseTimestamp(timestamp);
 
       switch (to) {
         case "unix":
@@ -136,12 +122,7 @@ timeCommands
   .option("--format <format>", "Output format (iso | unix | ms | date)", "iso")
   .action((timestamp, { seconds, minutes, hours, days, format }) => {
     try {
-      const base = timestamp ? new Date(timestamp) : new Date();
-
-      if (isNaN(base.getTime())) {
-        console.error(chalk.red("✗ Invalid timestamp"));
-        process.exit(1);
-      }
+      const base = timestamp ? parseTimestamp(timestamp) : new Date();
 
       const result = new Date(base);
       result.setSeconds(result.getSeconds() + parseInt(seconds, 10));
@@ -177,7 +158,7 @@ timeCommands
   .command("diff")
   .description("Calculate time difference between two timestamps")
   .argument("<timestamp1>", "First timestamp")
-  .argument("<timestamp2>", "Second timestamp (defaults to now)")
+  .argument("[timestamp2]", "Second timestamp (defaults to now)")
   .option(
     "--unit <unit>",
     "Output unit (ms | seconds | minutes | hours | days)",
@@ -186,13 +167,8 @@ timeCommands
   .option("--abs", "Absolute value (always positive)", false)
   .action((timestamp1, timestamp2, { unit, abs }) => {
     try {
-      const date1 = new Date(timestamp1);
-      const date2 = timestamp2 ? new Date(timestamp2) : new Date();
-
-      if (isNaN(date1.getTime()) || isNaN(date2.getTime())) {
-        console.error(chalk.red("✗ Invalid timestamp"));
-        process.exit(1);
-      }
+      const date1 = parseTimestamp(timestamp1);
+      const date2 = timestamp2 ? parseTimestamp(timestamp2) : new Date();
 
       let diff = date2.getTime() - date1.getTime();
 
@@ -235,19 +211,7 @@ timeCommands
   .option("--verbose", "Show detailed information", false)
   .action((timestamp, { verbose }) => {
     try {
-      let date: Date;
-
-      if (/^\d+$/.test(timestamp)) {
-        const num = parseInt(timestamp, 10);
-        date = num < 10000000000 ? new Date(num * 1000) : new Date(num);
-      } else {
-        date = new Date(timestamp);
-      }
-
-      if (isNaN(date.getTime())) {
-        console.error(chalk.red("✗ Invalid timestamp"));
-        process.exit(1);
-      }
+      const date = parseTimestamp(timestamp);
 
       if (verbose) {
         console.log(chalk.green("✓ Valid timestamp"));

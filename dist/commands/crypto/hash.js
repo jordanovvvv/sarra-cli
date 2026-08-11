@@ -7,17 +7,18 @@ exports.hashCommand = void 0;
 const commander_1 = require("commander");
 const crypto_1 = __importDefault(require("crypto"));
 const stdin_1 = require("../../utils/stdin");
-const prompt_user_1 = require("../../prompts/prompt-user");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
+const output_1 = require("../../utils/output");
 exports.hashCommand = new commander_1.Command("hash")
     .description("Generate cryptographic hash from input")
     .argument("<algorithm>", "Hash algorithm (md5 | sha1 | sha256 | sha512)")
     .argument("[input]", "Input string to hash (reads from stdin if omitted)")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async function (algorithm, input, { out, yes }) {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async function (algorithm, input, { out, save }) {
     const parentOpts = this.parent?.opts();
     const format = parentOpts?.format ?? "text";
     // Validate algorithm
@@ -56,20 +57,8 @@ exports.hashCommand = new commander_1.Command("hash")
             break;
     }
     // Determine output method
-    let outputPath;
-    if (out) {
-        // User provided -o flag, use it directly
-        outputPath = out;
-    }
-    else if (yes) {
-        // User used -y flag, output to stdout
-        outputPath = null;
-    }
-    else {
-        // Ask user
-        const defaultFilename = format === "json" ? "hash.json" : "hash.txt";
-        outputPath = await (0, prompt_user_1.getSaveLocation)(defaultFilename);
-    }
+    const defaultFilename = format === "json" ? "hash.json" : "hash.txt";
+    const outputPath = await (0, output_1.resolveOutputPath)(out, save, defaultFilename);
     if (outputPath) {
         // Save to file
         const filePath = path_1.default.resolve(outputPath);

@@ -8,17 +8,18 @@ const commander_1 = require("commander");
 const stdin_1 = require("../../utils/stdin");
 const chalk_1 = __importDefault(require("chalk"));
 const crypto_1 = __importDefault(require("crypto"));
-const prompt_user_1 = require("../../prompts/prompt-user");
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
+const output_1 = require("../../utils/output");
 // AES Encryption Command
 exports.aesEncryptCommand = new commander_1.Command("aes-encrypt")
     .description("Encrypt data using AES-256-GCM")
     .argument("[input]", "Input string to encrypt (reads from stdin if omitted)")
     .option("-k, --key <key>", "Encryption key (hex, 32 bytes). Auto-generated if omitted")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async function (input, { key, out, yes }) {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async function (input, { key, out, save }) {
     const parentOpts = this.parent?.opts();
     const format = parentOpts?.format ?? "text";
     // Get input data
@@ -71,17 +72,8 @@ exports.aesEncryptCommand = new commander_1.Command("aes-encrypt")
             break;
     }
     // Determine output method
-    let outputPath;
-    if (out) {
-        outputPath = out;
-    }
-    else if (yes) {
-        outputPath = null;
-    }
-    else {
-        const defaultFilename = format === "json" ? "encrypted.json" : "encrypted.txt";
-        outputPath = await (0, prompt_user_1.getSaveLocation)(defaultFilename);
-    }
+    const defaultFilename = format === "json" ? "encrypted.json" : "encrypted.txt";
+    const outputPath = await (0, output_1.resolveOutputPath)(out, save, defaultFilename);
     if (outputPath) {
         const filePath = path_1.default.resolve(outputPath);
         const dir = path_1.default.dirname(filePath);
@@ -104,8 +96,9 @@ exports.aesDecryptCommand = new commander_1.Command("aes-decrypt")
     .requiredOption("-i, --iv <iv>", "Initialization vector (hex, 16 bytes)")
     .requiredOption("-t, --tag <tag>", "Auth tag (hex, 16 bytes)")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async function (input, { key, iv, tag, out, yes }) {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async function (input, { key, iv, tag, out, save }) {
     // Get input data
     const encryptedData = input ?? (await (0, stdin_1.readStdin)());
     if (!encryptedData) {
@@ -123,16 +116,7 @@ exports.aesDecryptCommand = new commander_1.Command("aes-decrypt")
         let decrypted = decipher.update(encryptedData.trim(), "hex", "utf8");
         decrypted += decipher.final("utf8");
         // Determine output method
-        let outputPath;
-        if (out) {
-            outputPath = out;
-        }
-        else if (yes) {
-            outputPath = null;
-        }
-        else {
-            outputPath = await (0, prompt_user_1.getSaveLocation)("decrypted.txt");
-        }
+        const outputPath = await (0, output_1.resolveOutputPath)(out, save, "decrypted.txt");
         if (outputPath) {
             const filePath = path_1.default.resolve(outputPath);
             const dir = path_1.default.dirname(filePath);

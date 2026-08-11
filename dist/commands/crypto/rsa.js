@@ -9,15 +9,16 @@ const commander_1 = require("commander");
 const crypto_1 = __importDefault(require("crypto"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const prompt_user_1 = require("../../prompts/prompt-user");
 const stdin_1 = require("../../utils/stdin");
+const output_1 = require("../../utils/output");
 // RSA Key Generation Command
 exports.rsaKeygenCommand = new commander_1.Command("rsa-keygen")
     .description("Generate RSA key pair")
     .option("-s, --size <bits>", "Key size in bits (2048, 3072, 4096)", "2048")
     .option("-o, --out <dir>", "Output directory (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async function ({ size, out, yes }) {
+    .option("--save", "Prompt for an output directory", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async function ({ size, out, save }) {
     const keySize = parseInt(size);
     if (![2048, 3072, 4096].includes(keySize)) {
         console.error(chalk_1.default.red("✗ Invalid key size"));
@@ -37,7 +38,8 @@ exports.rsaKeygenCommand = new commander_1.Command("rsa-keygen")
             format: "pem",
         },
     });
-    if (yes) {
+    const outputDir = await (0, output_1.resolveOutputPath)(out, save, "./keys");
+    if (!outputDir) {
         // Output to stdout
         console.log("=== PUBLIC KEY ===");
         console.log(publicKey);
@@ -45,15 +47,6 @@ exports.rsaKeygenCommand = new commander_1.Command("rsa-keygen")
         console.log(privateKey);
     }
     else {
-        // Determine output directory
-        let outputDir;
-        if (out) {
-            outputDir = out;
-        }
-        else {
-            const defaultDir = "./keys";
-            outputDir = await (0, prompt_user_1.getSaveLocation)(defaultDir);
-        }
         if (outputDir) {
             const dir = path_1.default.resolve(outputDir);
             fs_1.default.mkdirSync(dir, { recursive: true });
@@ -79,8 +72,9 @@ exports.rsaEncryptCommand = new commander_1.Command("rsa-encrypt")
     .argument("[input]", "Input string to encrypt (reads from stdin if omitted)")
     .requiredOption("-p, --public-key <file>", "Path to public key file (PEM)")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async function (input, { publicKey, out, yes }) {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async function (input, { publicKey, out, save }) {
     // Get input data
     const data = input ?? (await (0, stdin_1.readStdin)());
     if (!data) {
@@ -102,16 +96,7 @@ exports.rsaEncryptCommand = new commander_1.Command("rsa-encrypt")
     }, Buffer.from(data));
     const output = encrypted.toString("base64");
     // Determine output method
-    let outputPath;
-    if (out) {
-        outputPath = out;
-    }
-    else if (yes) {
-        outputPath = null;
-    }
-    else {
-        outputPath = await (0, prompt_user_1.getSaveLocation)("encrypted.txt");
-    }
+    const outputPath = await (0, output_1.resolveOutputPath)(out, save, "encrypted.txt");
     if (outputPath) {
         const filePath = path_1.default.resolve(outputPath);
         const dir = path_1.default.dirname(filePath);
@@ -130,8 +115,9 @@ exports.rsaDecryptCommand = new commander_1.Command("rsa-decrypt")
     .argument("[input]", "Encrypted data (base64) (reads from stdin if omitted)")
     .requiredOption("-k, --private-key <file>", "Path to private key file (PEM)")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async function (input, { privateKey, out, yes }) {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async function (input, { privateKey, out, save }) {
     // Get input data
     const encryptedData = input ?? (await (0, stdin_1.readStdin)());
     if (!encryptedData) {
@@ -154,16 +140,7 @@ exports.rsaDecryptCommand = new commander_1.Command("rsa-decrypt")
         }, Buffer.from(encryptedData.trim(), "base64"));
         const output = decrypted.toString("utf8");
         // Determine output method
-        let outputPath;
-        if (out) {
-            outputPath = out;
-        }
-        else if (yes) {
-            outputPath = null;
-        }
-        else {
-            outputPath = await (0, prompt_user_1.getSaveLocation)("decrypted.txt");
-        }
+        const outputPath = await (0, output_1.resolveOutputPath)(out, save, "decrypted.txt");
         if (outputPath) {
             const filePath = path_1.default.resolve(outputPath);
             const dir = path_1.default.dirname(filePath);

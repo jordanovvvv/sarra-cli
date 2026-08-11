@@ -47,7 +47,7 @@ IP Address Validation
     sarra geo validate 192.168.1.1
 
     # Validate IPv6 address
-    sarra geo validate 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+    sarra geo validate 2001:db8::1
 
     # Validate in scripts (exit code 0 for valid, 1 for invalid)
     if sarra geo validate 10.0.0.1; then
@@ -135,7 +135,7 @@ lookup
 
 validate
 
-    Validate IPv4 and IPv6 addresses using regex patterns.
+    Validate IPv4 and IPv6 addresses using Node.js IP parsing.
 
     Usage:
         sarra geo validate <ip>
@@ -267,7 +267,7 @@ JSON Output for Scripts
 Combine with Other Tools
 
     # Get IP and lookup in one line
-    MY_IP=$(sarra geo my-ip -y | grep -oE '[0-9.]+')
+    MY_IP=$(sarra geo my-ip | grep -oE '[0-9.]+')
     sarra geo lookup $MY_IP
 
     # Validate IPs from a file

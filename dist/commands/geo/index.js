@@ -22,6 +22,7 @@ catch {
 }
 exports.geoCommands = new commander_1.Command("geo")
     .description("Geographical and IP utilities")
+    .option("--format <format>", "Output format: text or json (applies to all geo subcommands)", "text")
     .addHelpText("after", `\n${(0, prettyHelp_1.prettyHelp)(helpText)}`)
     .addCommand(my_ip_1.myIpCommand) // Get current public IP
     .addCommand(ip_lookup_1.ipLookupCommand) // Lookup IP geolocation

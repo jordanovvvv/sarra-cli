@@ -9,7 +9,7 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
 const stdin_1 = require("../../utils/stdin");
-const prompt_user_1 = require("../../prompts/prompt-user");
+const output_1 = require("../../utils/output");
 exports.jsonCommand = new commander_1.Command("json").description("JSON utilities");
 // Format/Pretty-print JSON
 exports.jsonCommand
@@ -19,23 +19,15 @@ exports.jsonCommand
     .argument("[file]", "JSON file (reads from stdin if omitted)")
     .option("-i, --indent <spaces>", "Number of spaces for indentation", "2")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async (file, { indent, out, yes }) => {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async (file, { indent, out, save }) => {
     const input = file ? fs_1.default.readFileSync(file, "utf8") : await (0, stdin_1.readStdin)();
     try {
         const parsed = JSON.parse(input);
         const formatted = JSON.stringify(parsed, null, parseInt(indent));
         // Determine output method
-        let outputPath;
-        if (out) {
-            outputPath = out;
-        }
-        else if (yes) {
-            outputPath = null;
-        }
-        else {
-            outputPath = await (0, prompt_user_1.getSaveLocation)("formatted.json");
-        }
+        const outputPath = await (0, output_1.resolveOutputPath)(out, save, "formatted.json");
         if (outputPath) {
             const filePath = path_1.default.resolve(outputPath);
             fs_1.default.mkdirSync(path_1.default.dirname(filePath), { recursive: true });
@@ -59,22 +51,14 @@ exports.jsonCommand
     .description("Minify JSON (remove whitespace)")
     .argument("[file]", "JSON file (reads from stdin if omitted)")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async (file, { out, yes }) => {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async (file, { out, save }) => {
     const input = file ? fs_1.default.readFileSync(file, "utf8") : await (0, stdin_1.readStdin)();
     try {
         const parsed = JSON.parse(input);
         const minified = JSON.stringify(parsed);
-        let outputPath;
-        if (out) {
-            outputPath = out;
-        }
-        else if (yes) {
-            outputPath = null;
-        }
-        else {
-            outputPath = await (0, prompt_user_1.getSaveLocation)("minified.json");
-        }
+        const outputPath = await (0, output_1.resolveOutputPath)(out, save, "minified.json");
         if (outputPath) {
             const filePath = path_1.default.resolve(outputPath);
             fs_1.default.mkdirSync(path_1.default.dirname(filePath), { recursive: true });
@@ -119,8 +103,9 @@ exports.jsonCommand
     .argument("<path>", "JSON path (e.g., 'user.name' or 'items[0].id')")
     .argument("[file]", "JSON file (reads from stdin if omitted)")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async (jsonPath, file, { out, yes }) => {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async (jsonPath, file, { out, save }) => {
     const input = file ? fs_1.default.readFileSync(file, "utf8") : await (0, stdin_1.readStdin)();
     try {
         const parsed = JSON.parse(input);
@@ -138,16 +123,7 @@ exports.jsonCommand
         const output = typeof value === "object"
             ? JSON.stringify(value, null, 2)
             : String(value);
-        let outputPath;
-        if (out) {
-            outputPath = out;
-        }
-        else if (yes) {
-            outputPath = null;
-        }
-        else {
-            outputPath = await (0, prompt_user_1.getSaveLocation)("query-result.json");
-        }
+        const outputPath = await (0, output_1.resolveOutputPath)(out, save, "query-result.json");
         if (outputPath) {
             const filePath = path_1.default.resolve(outputPath);
             fs_1.default.mkdirSync(path_1.default.dirname(filePath), { recursive: true });
@@ -170,8 +146,9 @@ exports.jsonCommand
     .description("Merge multiple JSON objects")
     .argument("<files...>", "JSON files to merge")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async (files, { out, yes }) => {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async (files, { out, save }) => {
     try {
         const objects = files.map((file) => {
             const content = fs_1.default.readFileSync(file, "utf8");
@@ -179,16 +156,7 @@ exports.jsonCommand
         });
         const merged = Object.assign({}, ...objects);
         const output = JSON.stringify(merged, null, 2);
-        let outputPath;
-        if (out) {
-            outputPath = out;
-        }
-        else if (yes) {
-            outputPath = null;
-        }
-        else {
-            outputPath = await (0, prompt_user_1.getSaveLocation)("merged.json");
-        }
+        const outputPath = await (0, output_1.resolveOutputPath)(out, save, "merged.json");
         if (outputPath) {
             const filePath = path_1.default.resolve(outputPath);
             fs_1.default.mkdirSync(path_1.default.dirname(filePath), { recursive: true });
@@ -213,8 +181,9 @@ exports.jsonCommand
     .description("Convert JSON array to CSV")
     .argument("[file]", "JSON file with array of objects (reads from stdin if omitted)")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async (file, { out, yes }) => {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async (file, { out, save }) => {
     const input = file ? fs_1.default.readFileSync(file, "utf8") : await (0, stdin_1.readStdin)();
     try {
         const parsed = JSON.parse(input);
@@ -239,16 +208,7 @@ exports.jsonCommand
                 .join(",")),
         ];
         const csv = csvRows.join("\n");
-        let outputPath;
-        if (out) {
-            outputPath = out;
-        }
-        else if (yes) {
-            outputPath = null;
-        }
-        else {
-            outputPath = await (0, prompt_user_1.getSaveLocation)("output.csv");
-        }
+        const outputPath = await (0, output_1.resolveOutputPath)(out, save, "output.csv");
         if (outputPath) {
             const filePath = path_1.default.resolve(outputPath);
             fs_1.default.mkdirSync(path_1.default.dirname(filePath), { recursive: true });

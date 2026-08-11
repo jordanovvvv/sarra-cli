@@ -38,6 +38,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.promptUser = promptUser;
 exports.getSaveLocation = getSaveLocation;
+exports.getSaveDirectory = getSaveDirectory;
 const chalk_1 = __importDefault(require("chalk"));
 const readline = __importStar(require("readline"));
 const path = __importStar(require("path"));
@@ -74,4 +75,22 @@ async function getSaveLocation(defaultPath) {
     else {
         return answer; // Use custom path
     }
+}
+async function getSaveDirectory(defaultDirectory) {
+    const cwd = process.cwd();
+    const fullPath = path.resolve(cwd, defaultDirectory);
+    console.log(chalk_1.default.cyan("\n📁 Output Directory"));
+    console.log(chalk_1.default.gray(`   Current directory: ${cwd}`));
+    console.log(chalk_1.default.gray(`   Default directory: ${defaultDirectory}`));
+    console.log(chalk_1.default.gray(`   Full path: ${fullPath}\n`));
+    const answer = await promptUser(`Use this output directory? (Y/n/path): `);
+    if (answer.toLowerCase() === "n" || answer.toLowerCase() === "no") {
+        return null;
+    }
+    if (answer === "" ||
+        answer.toLowerCase() === "y" ||
+        answer.toLowerCase() === "yes") {
+        return defaultDirectory;
+    }
+    return answer;
 }

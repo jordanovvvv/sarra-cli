@@ -23,29 +23,23 @@ try {
 catch {
     helpText = "";
 }
-exports.sslCommands = new commander_1.Command("ssl");
+exports.sslCommands = new commander_1.Command("ssl")
+    .description("SSL certificate generation and management")
+    .addHelpText("after", `\n${(0, prettyHelp_1.prettyHelp)(helpText)}`);
 exports.sslCommands
     .command("generate")
     .description("Generate a SSL certificate")
-    .addHelpText("after", `\n${(0, prettyHelp_1.prettyHelp)(helpText)}`)
     .option("-d, --domain <domain>", "Domain name", "localhost")
+    .option("-o, --out <dir>", "Write certificate files to a directory")
+    .option("--save", "Prompt for an output directory", false)
     .option("--val, --validity <days>", "Validity period (max 365)", (val) => {
     const parsed = parseInt(val, 10);
     return isNaN(parsed) || parsed < 1 ? 365 : Math.min(parsed, 365);
 }, 365)
     .action(async (options) => {
-    const { domain, validity } = options;
-    // 1. Determine Save Path interactively
-    const defaultFileName = `${domain}.crt`;
-    const targetPath = await (0, prompt_user_1.getSaveLocation)(defaultFileName);
-    if (!targetPath) {
-        console.log(chalk_1.default.yellow("Operation cancelled by user."));
-        return;
-    }
-    // Determine directory and filenames
-    const outDir = targetPath.endsWith(".crt") || targetPath.endsWith(".key")
-        ? "./certs"
-        : targetPath;
+    const { domain, validity, out, save } = options;
+    // Prompt only when explicitly requested. Otherwise print PEM to stdout.
+    const outDir = out ?? (save ? await (0, prompt_user_1.getSaveDirectory)("./certs") : null);
     console.log(chalk_1.default.blue(`\nGenerating cert for ${domain} (${validity} days)...`));
     // 2. Generate Key Pair & Cert (Node-Forge logic)
     const keys = node_forge_1.default.pki.rsa.generateKeyPair(2048);
@@ -64,11 +58,18 @@ exports.sslCommands
         { name: "subjectAltName", altNames: [{ type: 2, value: domain }] },
     ]);
     cert.sign(keys.privateKey, node_forge_1.default.md.sha256.create());
+    const pemKey = node_forge_1.default.pki.privateKeyToPem(keys.privateKey);
+    const pemCert = node_forge_1.default.pki.certificateToPem(cert);
+    if (!outDir) {
+        console.log("=== CERTIFICATE ===");
+        console.log(pemCert.trim());
+        console.log("\n=== PRIVATE KEY ===");
+        console.log(pemKey.trim());
+        return;
+    }
     // 3. Final Write
     if (!fs_1.default.existsSync(outDir))
         fs_1.default.mkdirSync(outDir, { recursive: true });
-    const pemKey = node_forge_1.default.pki.privateKeyToPem(keys.privateKey);
-    const pemCert = node_forge_1.default.pki.certificateToPem(cert);
     fs_1.default.writeFileSync(`${outDir}/${domain}.key`, pemKey);
     fs_1.default.writeFileSync(`${outDir}/${domain}.crt`, pemCert);
     // 4. Write README.md to output directory

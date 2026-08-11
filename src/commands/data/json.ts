@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import chalk from "chalk";
 import { readStdin } from "../../utils/stdin";
-import { getSaveLocation } from "../../prompts/prompt-user";
+import { resolveOutputPath } from "../../utils/output";
 
 export const jsonCommand = new Command("json").description("JSON utilities");
 
@@ -15,8 +15,9 @@ jsonCommand
   .argument("[file]", "JSON file (reads from stdin if omitted)")
   .option("-i, --indent <spaces>", "Number of spaces for indentation", "2")
   .option("-o, --out <file>", "Write output to a file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async (file, { indent, out, yes }) => {
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async (file, { indent, out, save }) => {
     const input = file ? fs.readFileSync(file, "utf8") : await readStdin();
 
     try {
@@ -24,15 +25,7 @@ jsonCommand
       const formatted = JSON.stringify(parsed, null, parseInt(indent));
 
       // Determine output method
-      let outputPath: string | null;
-
-      if (out) {
-        outputPath = out;
-      } else if (yes) {
-        outputPath = null;
-      } else {
-        outputPath = await getSaveLocation("formatted.json");
-      }
+      const outputPath = await resolveOutputPath(out, save, "formatted.json");
 
       if (outputPath) {
         const filePath = path.resolve(outputPath);
@@ -57,23 +50,16 @@ jsonCommand
   .description("Minify JSON (remove whitespace)")
   .argument("[file]", "JSON file (reads from stdin if omitted)")
   .option("-o, --out <file>", "Write output to a file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async (file, { out, yes }) => {
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async (file, { out, save }) => {
     const input = file ? fs.readFileSync(file, "utf8") : await readStdin();
 
     try {
       const parsed = JSON.parse(input);
       const minified = JSON.stringify(parsed);
 
-      let outputPath: string | null;
-
-      if (out) {
-        outputPath = out;
-      } else if (yes) {
-        outputPath = null;
-      } else {
-        outputPath = await getSaveLocation("minified.json");
-      }
+      const outputPath = await resolveOutputPath(out, save, "minified.json");
 
       if (outputPath) {
         const filePath = path.resolve(outputPath);
@@ -122,8 +108,9 @@ jsonCommand
   .argument("<path>", "JSON path (e.g., 'user.name' or 'items[0].id')")
   .argument("[file]", "JSON file (reads from stdin if omitted)")
   .option("-o, --out <file>", "Write output to a file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async (jsonPath, file, { out, yes }) => {
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async (jsonPath, file, { out, save }) => {
     const input = file ? fs.readFileSync(file, "utf8") : await readStdin();
 
     try {
@@ -147,15 +134,11 @@ jsonCommand
           ? JSON.stringify(value, null, 2)
           : String(value);
 
-      let outputPath: string | null;
-
-      if (out) {
-        outputPath = out;
-      } else if (yes) {
-        outputPath = null;
-      } else {
-        outputPath = await getSaveLocation("query-result.json");
-      }
+      const outputPath = await resolveOutputPath(
+        out,
+        save,
+        "query-result.json"
+      );
 
       if (outputPath) {
         const filePath = path.resolve(outputPath);
@@ -179,8 +162,9 @@ jsonCommand
   .description("Merge multiple JSON objects")
   .argument("<files...>", "JSON files to merge")
   .option("-o, --out <file>", "Write output to a file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async (files, { out, yes }) => {
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async (files, { out, save }) => {
     try {
       const objects = files.map((file: string) => {
         const content = fs.readFileSync(file, "utf8");
@@ -190,15 +174,7 @@ jsonCommand
       const merged = Object.assign({}, ...objects);
       const output = JSON.stringify(merged, null, 2);
 
-      let outputPath: string | null;
-
-      if (out) {
-        outputPath = out;
-      } else if (yes) {
-        outputPath = null;
-      } else {
-        outputPath = await getSaveLocation("merged.json");
-      }
+      const outputPath = await resolveOutputPath(out, save, "merged.json");
 
       if (outputPath) {
         const filePath = path.resolve(outputPath);
@@ -229,8 +205,9 @@ jsonCommand
     "JSON file with array of objects (reads from stdin if omitted)"
   )
   .option("-o, --out <file>", "Write output to a file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async (file, { out, yes }) => {
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async (file, { out, save }) => {
     const input = file ? fs.readFileSync(file, "utf8") : await readStdin();
 
     try {
@@ -264,15 +241,7 @@ jsonCommand
 
       const csv = csvRows.join("\n");
 
-      let outputPath: string | null;
-
-      if (out) {
-        outputPath = out;
-      } else if (yes) {
-        outputPath = null;
-      } else {
-        outputPath = await getSaveLocation("output.csv");
-      }
+      const outputPath = await resolveOutputPath(out, save, "output.csv");
 
       if (outputPath) {
         const filePath = path.resolve(outputPath);

@@ -22,6 +22,7 @@ catch {
 }
 exports.cryptoCommands = new commander_1.Command("crypto")
     .description("Cryptographic utilities")
+    .option("--format <format>", "Output format: text or json (applies to supported crypto subcommands)", "text")
     .addHelpText("after", `\n${(0, prettyHelp_1.prettyHelp)(helpText)}`)
     .action(function () {
     this.outputHelp();

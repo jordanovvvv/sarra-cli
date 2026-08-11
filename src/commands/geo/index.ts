@@ -18,6 +18,11 @@ try {
 
 export const geoCommands = new Command("geo")
   .description("Geographical and IP utilities")
+  .option(
+    "--format <format>",
+    "Output format: text or json (applies to all geo subcommands)",
+    "text"
+  )
   .addHelpText("after", `\n${prettyHelp(helpText)}`)
   .addCommand(myIpCommand) // Get current public IP
   .addCommand(ipLookupCommand) // Lookup IP geolocation

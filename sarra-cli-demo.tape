@@ -1,6 +1,5 @@
 # Output files
 Output demo.gif
-Output demo.mp4
 
 # Settings
 Set FontSize 16
@@ -8,7 +7,7 @@ Set Width 1400
 Set Height 800
 Set TypingSpeed 30ms
 Set Theme "Dracula"
-Set Shell "powershell"
+Set Shell "bash"
 
 # ----------------------------------------
 # Header
@@ -17,8 +16,8 @@ Sleep 300ms
 Type "# 🚀 SARRA CLI - Fast Developer Tools"
 Enter
 Sleep 800ms
-Type "clear"
-Enter
+Ctrl+L
+Sleep 500ms
 
 # ----------------------------------------
 # 1. ID Generation
@@ -34,8 +33,8 @@ Enter
 Type "sarra id random --length 32"
 Enter
 Sleep 1.5s
-Type "clear"
-Enter
+Ctrl+L
+Sleep 500ms
 
 # ----------------------------------------
 # 2. Cryptography
@@ -48,7 +47,7 @@ Sleep 1.5s
 
 Type ""
 Enter
-Type "sarra crypto aes-encrypt 'secret message' -y"
+Type "sarra crypto aes-encrypt 'secret message'"
 Enter
 Sleep 2s
 
@@ -57,50 +56,44 @@ Enter
 Type "sarra crypto base64 'encode this'"
 Enter
 Sleep 1.5s
-Type "clear"
-Enter
+Ctrl+L
+Sleep 500ms
 
 # ----------------------------------------
-# 3. Geolocation & Network
+# 3. IP Validation
 # ----------------------------------------
-Type "# IP & Geolocation"
-Enter
-Type "sarra geo my-ip"
-Enter
-Sleep 1.5s
-
-Type ""
-Enter
-Type "sarra geo lookup 8.8.8.8"
-Enter
-Sleep 2s
-
-Type ""
+Type "# IP validation"
 Enter
 Type "sarra geo validate 192.168.1.1"
 Enter
 Sleep 1.5s
-Type "clear"
+
+Type ""
 Enter
+Type "sarra geo validate 2001:db8::1"
+Enter
+Sleep 1.5s
+Ctrl+L
+Sleep 500ms
 
 # ----------------------------------------
 # 4. JSON
 # ----------------------------------------
 Type "# JSON utilities"
 Enter
-Type `echo '{"name":"John","age":30}' > data.json`
+Type `printf '{"name":"John","age":30}\n' > /tmp/sarra-data.json`
 Enter
 Sleep 800ms
 
-Type "sarra data json data.json"
+Type "sarra data json format /tmp/sarra-data.json"
 Enter
 Sleep 1.5s
 
-Type "sarra data json query name data.json"
+Type "sarra data json query name /tmp/sarra-data.json"
 Enter
 Sleep 1.5s
-Type "clear"
-Enter
+Ctrl+L
+Sleep 500ms
 
 # ----------------------------------------
 # 5. QR Codes
@@ -110,8 +103,8 @@ Enter
 Type "sarra qr terminal 'https://github.com/jordanovvvv/sarra-cli'"
 Enter
 Sleep 3s
-Type "clear"
-Enter
+Ctrl+L
+Sleep 500ms
 
 # ----------------------------------------
 # 6. Time & SSL
@@ -124,11 +117,11 @@ Sleep 1s
 
 Type ""
 Enter
-Type "sarra ssl generate --domain localhost"
+Type "sarra ssl generate --domain localhost --out /tmp/sarra-certs"
 Enter
 Sleep 2.5s
-Type "clear"
-Enter
+Ctrl+L
+Sleep 500ms
 
 # ----------------------------------------
 # Finale

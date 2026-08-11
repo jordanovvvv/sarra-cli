@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ipValidateCommand = void 0;
 const chalk_1 = __importDefault(require("chalk"));
 const commander_1 = require("commander");
+const net_1 = require("net");
 // Validate IP address
 exports.ipValidateCommand = new commander_1.Command("validate")
     .description("Validate an IP address (IPv4 or IPv6)")
@@ -13,12 +14,9 @@ exports.ipValidateCommand = new commander_1.Command("validate")
     .action(async function (ip) {
     const parentOpts = this.parent?.opts();
     const format = parentOpts?.format ?? "text";
-    // IPv4 regex
-    const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-    // IPv6 regex (simplified)
-    const ipv6Regex = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
-    const isIPv4 = ipv4Regex.test(ip);
-    const isIPv6 = ipv6Regex.test(ip);
+    const ipVersion = (0, net_1.isIP)(ip);
+    const isIPv4 = ipVersion === 4;
+    const isIPv6 = ipVersion === 6;
     const isValid = isIPv4 || isIPv6;
     if (format === "json") {
         console.log(JSON.stringify({

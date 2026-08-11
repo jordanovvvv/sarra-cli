@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import { Command } from "commander";
+import { isIP } from "net";
 
 // Validate IP address
 export const ipValidateCommand = new Command("validate")
@@ -9,15 +10,9 @@ export const ipValidateCommand = new Command("validate")
     const parentOpts = this.parent?.opts() as { format?: string };
     const format = parentOpts?.format ?? "text";
 
-    // IPv4 regex
-    const ipv4Regex =
-      /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-
-    // IPv6 regex (simplified)
-    const ipv6Regex = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
-
-    const isIPv4 = ipv4Regex.test(ip);
-    const isIPv6 = ipv6Regex.test(ip);
+    const ipVersion = isIP(ip);
+    const isIPv4 = ipVersion === 4;
+    const isIPv6 = ipVersion === 6;
     const isValid = isIPv4 || isIPv6;
 
     if (format === "json") {

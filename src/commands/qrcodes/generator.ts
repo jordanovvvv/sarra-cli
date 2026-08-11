@@ -3,21 +3,20 @@ import { Command } from "commander";
 import QRCode from "qrcode";
 import chalk from "chalk";
 import * as fs from "fs";
-import { qrHelpText } from "./qr-help";
 import { getSaveLocation } from "../../prompts/prompt-user";
 import path from "path";
 import { prettyHelp } from "../../help/prettyHelp";
 
-const helpPath = path.resolve(__dirname, "../../docs/qr-help.md");
+const helpPath = path.resolve(__dirname, "../../docs/qrcode-help.md");
 
 let helpText = "";
 try {
   helpText = fs.readFileSync(helpPath, "utf8");
 } catch {}
 
-export const qrCommands = new Command("qr").description(
-  "QR code generation and utilities"
-);
+export const qrCommands = new Command("qr")
+  .description("QR code generation and utilities")
+  .addHelpText("after", `\n${prettyHelp(helpText)}`);
 
 // Helper function to display ASCII QR code
 async function displayAscii(text: string, small: boolean = true) {
@@ -36,7 +35,8 @@ qrCommands
   .description("Generate a QR code from text")
   .argument("<text>", "Text to encode in the QR code")
   .option("-o, --output <file>", "Output file path (skips prompt)")
-  .option("-y, --yes", "Skip prompt and use default location", false)
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Save to the default location (compatibility flag)", false)
   .option("-s, --size <pixels>", "Image width in pixels", "300")
   .option(
     "-e, --error-correction <level>",
@@ -45,9 +45,9 @@ qrCommands
   )
   .option("-t, --terminal", "Display ASCII representation in terminal", false)
   .option("--small", "Use small ASCII characters (with -t)", true)
+  .option("--no-small", "Use full-size ASCII characters (with -t)")
   .option("--dark <color>", "Dark color (hex)", "#000000")
   .option("--light <color>", "Light color (hex)", "#FFFFFF")
-  .addHelpText("after", `\n${prettyHelp(helpText)}`)
   .action(async (text: string, options) => {
     try {
       const errorLevel = options.errorCorrection.toUpperCase();
@@ -64,11 +64,12 @@ qrCommands
         // User provided -o flag, use it directly
         outputPath = options.output;
       } else if (options.yes) {
-        // User used -y flag, use default
+        // Keep the legacy -y behavior of saving to the default path.
         outputPath = "qrcode.png";
-      } else {
-        // Ask user
+      } else if (options.save) {
         outputPath = await getSaveLocation("qrcode.png");
+      } else {
+        outputPath = null;
       }
 
       // If user chose not to save, only show terminal
@@ -89,6 +90,7 @@ qrCommands
       };
 
       // Generate and save QR code
+      fs.mkdirSync(path.dirname(path.resolve(outputPath)), { recursive: true });
       await QRCode.toFile(outputPath, text, qrOptions);
 
       console.log(chalk.green("\n✓") + " QR code generated successfully");
@@ -105,7 +107,6 @@ qrCommands
       process.exit(1);
     }
   });
-
 // Generate QR code to terminal only (no file output)
 qrCommands
   .command("terminal")
@@ -113,6 +114,7 @@ qrCommands
   .description("Display QR code as ASCII art in terminal only (no file)")
   .argument("<text>", "Text to encode")
   .option("--small", "Use small characters", true)
+  .option("--no-small", "Use full-size characters")
   .action(async (text: string, options) => {
     try {
       await displayAscii(text, options.small);
@@ -122,17 +124,18 @@ qrCommands
       process.exit(1);
     }
   });
-
 // Generate QR code from URL
 qrCommands
   .command("url")
   .description("Generate QR code from a URL")
   .argument("<url>", "URL to encode")
   .option("-o, --output <file>", "Output file path (skips prompt)")
-  .option("-y, --yes", "Skip prompt and use default location", false)
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Save to the default location (compatibility flag)", false)
   .option("-s, --size <pixels>", "Image width in pixels", "400")
   .option("-t, --terminal", "Display ASCII representation in terminal", false)
   .option("--small", "Use small ASCII characters (with -t)", true)
+  .option("--no-small", "Use full-size ASCII characters (with -t)")
   .action(async (url: string, options) => {
     try {
       // Basic URL validation
@@ -150,8 +153,10 @@ qrCommands
         outputPath = options.output;
       } else if (options.yes) {
         outputPath = "url-qr.png";
-      } else {
+      } else if (options.save) {
         outputPath = await getSaveLocation("url-qr.png");
+      } else {
+        outputPath = null;
       }
 
       if (!outputPath) {
@@ -166,6 +171,7 @@ qrCommands
         margin: 4,
       };
 
+      fs.mkdirSync(path.dirname(path.resolve(outputPath)), { recursive: true });
       await QRCode.toFile(outputPath, url, qrOptions);
 
       console.log(chalk.green("\n✓") + " URL QR code generated");
@@ -180,17 +186,18 @@ qrCommands
       process.exit(1);
     }
   });
-
 // Generate QR code from file content
 qrCommands
   .command("file")
   .description("Generate QR code from file content")
   .argument("<input>", "Input file to read")
   .option("-o, --output <file>", "Output QR code file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and use default location", false)
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Save to the default location (compatibility flag)", false)
   .option("-s, --size <pixels>", "Image width in pixels", "400")
   .option("-t, --terminal", "Display ASCII representation in terminal", false)
   .option("--small", "Use small ASCII characters (with -t)", true)
+  .option("--no-small", "Use full-size ASCII characters (with -t)")
   .action(async (input: string, options) => {
     try {
       if (!fs.existsSync(input)) {
@@ -214,8 +221,10 @@ qrCommands
         outputPath = options.output;
       } else if (options.yes) {
         outputPath = "file-qr.png";
-      } else {
+      } else if (options.save) {
         outputPath = await getSaveLocation("file-qr.png");
+      } else {
+        outputPath = null;
       }
 
       if (!outputPath) {
@@ -230,6 +239,7 @@ qrCommands
         margin: 4,
       };
 
+      fs.mkdirSync(path.dirname(path.resolve(outputPath)), { recursive: true });
       await QRCode.toFile(outputPath, content, qrOptions);
 
       console.log(chalk.green("\n✓") + " QR code generated from file");
@@ -247,6 +257,3 @@ qrCommands
       process.exit(1);
     }
   });
-
-// Add help text
-qrCommands.addHelpText("after", qrHelpText);

@@ -6,17 +6,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.base64Command = void 0;
 const commander_1 = require("commander");
 const stdin_1 = require("../../utils/stdin");
-const prompt_user_1 = require("../../prompts/prompt-user");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
+const output_1 = require("../../utils/output");
 exports.base64Command = new commander_1.Command("base64")
     .description("Base64 encode or decode data")
     .argument("[input]", "Input string (reads from stdin if omitted)")
     .option("-d, --decode", "Decode base64 input", false)
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async function (input, { decode, out, yes }) {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async function (input, { decode, out, save }) {
     const parentOpts = this.parent?.opts();
     const format = parentOpts?.format ?? "text";
     // Get input data
@@ -62,20 +63,8 @@ exports.base64Command = new commander_1.Command("base64")
             break;
     }
     // Determine output method
-    let outputPath;
-    if (out) {
-        // User provided -o flag, use it directly
-        outputPath = out;
-    }
-    else if (yes) {
-        // User used -y flag, output to stdout
-        outputPath = null;
-    }
-    else {
-        // Ask user
-        const defaultFilename = format === "json" ? "base64.json" : "base64.txt";
-        outputPath = await (0, prompt_user_1.getSaveLocation)(defaultFilename);
-    }
+    const defaultFilename = format === "json" ? "base64.json" : "base64.txt";
+    const outputPath = await (0, output_1.resolveOutputPath)(out, save, defaultFilename);
     if (outputPath) {
         // Save to file
         const filePath = path_1.default.resolve(outputPath);

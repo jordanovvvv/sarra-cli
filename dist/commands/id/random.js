@@ -8,15 +8,16 @@ const commander_1 = require("commander");
 const crypto_1 = __importDefault(require("crypto"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const prompt_user_1 = require("../../prompts/prompt-user");
 const chalk_1 = __importDefault(require("chalk"));
+const output_1 = require("../../utils/output");
 exports.randomCommand = new commander_1.Command("random")
     .description("Generate cryptographically secure random tokens")
     .option("-l, --length <number>", "Byte length (hex output is length × 2 characters)", "16")
     .option("-c, --count <number>", "How many tokens to generate", "1")
     .option("-o, --out <file>", "Write output to a file (skips prompt)")
-    .option("-y, --yes", "Skip prompt and output to stdout", false)
-    .action(async function ({ length, count, out, yes }) {
+    .option("--save", "Prompt for a save location", false)
+    .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+    .action(async function ({ length, count, out, save }) {
     const parentOpts = this.parent?.opts();
     const format = parentOpts?.format ?? "text";
     const byteLength = Number(length);
@@ -46,20 +47,8 @@ exports.randomCommand = new commander_1.Command("random")
             break;
     }
     // Determine output method
-    let outputPath;
-    if (out) {
-        // User provided -o flag, use it directly
-        outputPath = out;
-    }
-    else if (yes) {
-        // User used -y flag, output to stdout
-        outputPath = null;
-    }
-    else {
-        // Ask user
-        const defaultFilename = format === "json" ? "tokens.json" : "tokens.txt";
-        outputPath = await (0, prompt_user_1.getSaveLocation)(defaultFilename);
-    }
+    const defaultFilename = format === "json" ? "tokens.json" : "tokens.txt";
+    const outputPath = await (0, output_1.resolveOutputPath)(out, save, defaultFilename);
     if (outputPath) {
         // Save to file
         const filePath = path_1.default.resolve(outputPath);

@@ -10,7 +10,7 @@ EXAMPLES
 
 Basic QR code generation
 
-    # Generate QR code from text (interactive prompt)
+    # Preview QR code from text in the terminal (default)
     sarra qr generate "Hello World"
     sarra qr gen "Hello World"
 
@@ -35,6 +35,7 @@ Terminal preview
 
     # Control ASCII size
     sarra qr terminal "Data" --small
+    sarra qr terminal "Data" --no-small
 
 URL QR codes
 
@@ -60,17 +61,16 @@ From file content
 
 Output management
 
-    # Interactive prompt (default behavior)
+    # Terminal preview (default behavior)
     sarra qr generate "Data"
 
-    # Skip prompt, only show terminal output
-    sarra qr generate "Data" -t
-    # (Then choose 'n' when prompted)
+    # Prompt for a save location
+    sarra qr generate "Data" --save
 
     # Save directly to file (skips prompt)
     sarra qr generate "Data" -o qrcode.png
 
-    # Use default location (skips prompt)
+    # Legacy compatibility: save to the default location
     sarra qr generate "Data" -y
 
     # Custom paths with nested directories (auto-created)
@@ -79,7 +79,8 @@ Output management
 
 INTERACTIVE MODE
 
-By default, commands will prompt you before saving to a file:
+QR generation previews in the terminal by default. Use `--save` to open the
+save-location prompt:
 
     📁 Save Location
        Current directory: /home/user/projects
@@ -93,9 +94,10 @@ Options:
 • Type 'n' → Skip saving (terminal preview only if -t used)
 • Type a path → Save to custom location
 
-Skip the prompt:
-• Use -y flag to auto-accept default location
-• Use -o/--output flag to save directly to a file
+Output controls:
+• Use --save to prompt for a location
+• Use -o/--output to save directly to a file
+• -y/--yes retains the legacy behavior of saving to the default location
 • Use terminal command for preview-only (never saves)
 
 ERROR CORRECTION LEVELS
@@ -113,10 +115,12 @@ OPTIONS
 Common options for generate, url, and file commands:
 
     -o, --output <file>       Output file path (skips prompt)
+    --save                    Prompt for a save location
     -s, --size <pixels>       Image width in pixels (default: 300-400)
     -t, --terminal            Display ASCII representation in terminal
-    --small                   Use small ASCII characters (with -t)
-    -y, --yes                 Skip prompt and use default location
+    --small                   Use compact ASCII characters (default)
+    --no-small                Use full-size ASCII characters
+    -y, --yes                 Save to default location (compatibility flag)
 
 Additional options for generate command:
 
@@ -126,12 +130,14 @@ Additional options for generate command:
 
 Options for terminal command:
 
-    --small                   Use small ASCII characters (default: true)
+    --small                   Use compact ASCII characters (default)
+    --no-small                Use full-size ASCII characters
 
 NOTES
 
 • QR codes are saved as PNG images
-• Without -o or -y flags, you'll be prompted for save location
+• Without output flags, QR commands preview in the terminal
+• The save-location prompt appears only with --save
 • Use -t flag to preview QR code in terminal before/after saving
 • Use terminal command for quick previews without saving files
 • Directories are created automatically when using -o/--output

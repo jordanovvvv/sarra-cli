@@ -1,17 +1,18 @@
 import { Command } from "commander";
 import { readStdin } from "../../utils/stdin";
-import { getSaveLocation } from "../../prompts/prompt-user";
 import fs from "fs";
 import path from "path";
 import chalk from "chalk";
+import { resolveOutputPath } from "../../utils/output";
 
 export const base64Command = new Command("base64")
   .description("Base64 encode or decode data")
   .argument("[input]", "Input string (reads from stdin if omitted)")
   .option("-d, --decode", "Decode base64 input", false)
   .option("-o, --out <file>", "Write output to a file (skips prompt)")
-  .option("-y, --yes", "Skip prompt and output to stdout", false)
-  .action(async function (input, { decode, out, yes }) {
+  .option("--save", "Prompt for a save location", false)
+  .option("-y, --yes", "Output to stdout (default; compatibility flag)", false)
+  .action(async function (input, { decode, out, save }) {
     const parentOpts = this.parent?.opts() as { format?: string };
     const format = parentOpts?.format ?? "text";
 
@@ -68,19 +69,8 @@ export const base64Command = new Command("base64")
     }
 
     // Determine output method
-    let outputPath: string | null;
-
-    if (out) {
-      // User provided -o flag, use it directly
-      outputPath = out;
-    } else if (yes) {
-      // User used -y flag, output to stdout
-      outputPath = null;
-    } else {
-      // Ask user
-      const defaultFilename = format === "json" ? "base64.json" : "base64.txt";
-      outputPath = await getSaveLocation(defaultFilename);
-    }
+    const defaultFilename = format === "json" ? "base64.json" : "base64.txt";
+    const outputPath = await resolveOutputPath(out, save, defaultFilename);
 
     if (outputPath) {
       // Save to file
