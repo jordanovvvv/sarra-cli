@@ -1,0 +1,86 @@
+// GENERATED from components/crypto.html — do not edit directly.
+// Edit the HTML source, then run: npm run web:inline
+document.querySelector('[data-component="crypto"]').innerHTML = `<section id="sec-crypto" class="space-y-4">
+        <div>
+          <h2 class="text-xl font-bold">🔐 crypto — Hashing, Encoding, Encryption</h2>
+          <p class="text-sm text-slate-400">Browser WebCrypto parity with CLI. AES-256-GCM and RSA-OAEP(SHA-256) round-trip with CLI output. Keys never leave this page.</p>
+        </div>
+        <div class="grid gap-4 lg:grid-cols-2">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">hash — md5 / sha1 / sha256 / sha512</h3>
+            <input id="hashInput" placeholder='Input, e.g. hello world' class="mt-3 w-full text-sm bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+            <div class="flex flex-wrap gap-2 mt-3 text-sm">
+              <select id="hashAlgo" class="bg-slate-800 border border-slate-700 rounded px-2 py-2">
+                <option>sha256</option><option>sha512</option><option>sha1</option><option>md5</option>
+              </select>
+              <button onclick="runHash()" class="bg-sky-600 hover:bg-sky-500 rounded px-4 py-2 font-semibold">Hash</button>
+              <button onclick="copyText('hashOut')" class="bg-slate-800 rounded px-3 py-2">Copy</button>
+            </div>
+            <pre id="hashOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 overflow-auto whitespace-pre-wrap">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra crypto hash sha256 "hello world"</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">base64 — encode / decode</h3>
+            <textarea id="b64Input" rows="2" placeholder="Text or base64…" class="mt-3 w-full text-sm bg-slate-800 border border-slate-700 rounded px-3 py-2"></textarea>
+            <div class="flex gap-2 mt-3 text-sm">
+              <button onclick="runB64(false)" class="bg-sky-600 hover:bg-sky-500 rounded px-4 py-2 font-semibold">Encode</button>
+              <button onclick="runB64(true)" class="bg-slate-700 hover:bg-slate-600 rounded px-4 py-2">Decode</button>
+              <button onclick="copyText('b64Out')" class="bg-slate-800 rounded px-3 py-2">Copy</button>
+            </div>
+            <pre id="b64Out" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 overflow-auto whitespace-pre-wrap">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra crypto base64 "hello" / sarra crypto base64 -d SGVsbG8=</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">aes-encrypt — AES-256-GCM</h3>
+            <input id="aesEncInput" placeholder="Secret message" class="mt-3 w-full text-sm bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+            <input id="aesEncKey" placeholder="Optional key — 64 hex chars (auto if empty)" class="mt-2 w-full text-sm bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+            <div class="flex gap-2 mt-3 text-sm">
+              <button onclick="runAesEnc()" class="bg-sky-600 hover:bg-sky-500 rounded px-4 py-2 font-semibold">Encrypt</button>
+              <button onclick="copyText('aesEncOut')" class="bg-slate-800 rounded px-3 py-2">Copy</button>
+            </div>
+            <pre id="aesEncOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 overflow-auto whitespace-pre-wrap">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra crypto --format json aes-encrypt "msg" -o encrypted.json</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">aes-decrypt</h3>
+            <div class="grid gap-2 mt-3 text-sm">
+              <input id="aesCipher" placeholder="encrypted hex" class="bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+              <input id="aesKey" placeholder="key hex (64 chars)" class="bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+              <div class="grid grid-cols-2 gap-2">
+                <input id="aesIv" placeholder="iv hex" class="bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+                <input id="aesTag" placeholder="auth tag hex" class="bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+              </div>
+            </div>
+            <div class="flex gap-2 mt-3 text-sm">
+              <button onclick="runAesDec()" class="bg-sky-600 hover:bg-sky-500 rounded px-4 py-2 font-semibold">Decrypt</button>
+              <button onclick="fillAesDemo()" class="bg-slate-800 rounded px-3 py-2">Use last encrypt</button>
+            </div>
+            <pre id="aesDecOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 overflow-auto whitespace-pre-wrap">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra crypto aes-decrypt &lt;hex&gt; -k &lt;key&gt; -i &lt;iv&gt; -t &lt;tag&gt;</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">rsa-keygen — RSA-OAEP key pair</h3>
+            <div class="flex flex-wrap gap-2 mt-3 text-sm items-center">
+              <select id="rsaSize" class="bg-slate-800 border border-slate-700 rounded px-2 py-2">
+                <option>2048</option><option>3072</option><option>4096</option>
+              </select>
+              <button onclick="runRsaKeygen()" class="bg-sky-600 hover:bg-sky-500 rounded px-4 py-2 font-semibold">Generate</button>
+              <button onclick="copyText('rsaOut')" class="bg-slate-800 rounded px-3 py-2">Copy</button>
+            </div>
+            <pre id="rsaOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 overflow-auto max-h-64 whitespace-pre-wrap">Keys appear here (PEM)…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra crypto rsa-keygen --size 2048 -o ./my-keys</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">rsa-encrypt / rsa-decrypt</h3>
+            <textarea id="rsaInput" rows="2" placeholder="Message or base64 ciphertext…" class="mt-3 w-full text-sm bg-slate-800 border border-slate-700 rounded px-3 py-2"></textarea>
+            <textarea id="rsaKey" rows="3" placeholder="Paste PEM public key (encrypt) or private key (decrypt)…" class="mt-2 w-full text-xs bg-slate-800 border border-slate-700 rounded px-3 py-2"></textarea>
+            <div class="flex gap-2 mt-3 text-sm">
+              <button onclick="runRsaEnc()" class="bg-sky-600 hover:bg-sky-500 rounded px-4 py-2 font-semibold">Encrypt</button>
+              <button onclick="runRsaDec()" class="bg-slate-700 hover:bg-slate-600 rounded px-4 py-2">Decrypt</button>
+            </div>
+            <pre id="rsaIoOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 overflow-auto whitespace-pre-wrap">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra crypto rsa-encrypt "msg" -p public.pem
+sarra crypto rsa-decrypt &lt;b64&gt; -k private.pem</pre>
+          </div>
+        </div>
+      </section>`;

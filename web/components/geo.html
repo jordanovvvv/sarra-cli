@@ -1,0 +1,43 @@
+<section id="sec-geo" class="space-y-4">
+        <div>
+          <h2 class="text-xl font-bold">📍 geo — IP &amp; network</h2>
+          <p class="text-sm text-slate-400">Validate works offline. My-IP / lookup call the same APIs as the CLI only after you opt in.</p>
+        </div>
+        <div class="grid gap-4 lg:grid-cols-2">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">validate — IPv4 / IPv6 (offline)</h3>
+            <input id="geoValidateInput" placeholder="e.g. 192.168.1.1 or 2001:db8::1" class="mt-3 w-full text-sm bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+            <div class="flex gap-2 mt-3 text-sm">
+              <button onclick="runGeoValidate()" class="bg-sky-600 rounded px-4 py-2 font-semibold">Validate</button>
+              <button onclick="copyText('geoValidateOut')" class="bg-slate-800 rounded px-3 py-2">Copy</button>
+            </div>
+            <pre id="geoValidateOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 whitespace-pre-wrap">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra geo validate 192.168.1.1</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">my-ip / lookup (opt-in network)</h3>
+            <label class="text-xs flex items-center gap-2 mt-3"><input id="geoConsent" type="checkbox" class="accent-sky-500" /> I agree to query ipify.org / ipapi.co (1000 req/day free).</label>
+            <div class="flex flex-wrap gap-2 mt-2 text-sm">
+              <button onclick="runMyIp(false)" class="bg-sky-600 rounded px-3 py-2 font-semibold">My IPv4</button>
+              <button onclick="runMyIp(true)" class="bg-slate-700 rounded px-3 py-2">My IPv6</button>
+            </div>
+            <div class="flex gap-2 mt-2 text-sm">
+              <input id="geoLookupInput" placeholder="IP or empty = self" class="flex-1 bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+              <button onclick="runLookup()" class="bg-sky-600 rounded px-4 py-2 font-semibold">Lookup</button>
+            </div>
+            <pre id="geoNetOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 overflow-auto max-h-64 whitespace-pre-wrap">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra geo my-ip --ipv4
+sarra geo lookup 8.8.8.8</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 lg:col-span-2">
+            <h3 class="font-semibold">local — interfaces (CLI-only, by design)</h3>
+            <p class="text-xs text-slate-400 mt-1">Browsers sandbox network interfaces, so this card shows what the page <em>can</em> see plus the exact CLI workflow.</p>
+            <div class="flex gap-2 mt-3 text-sm">
+              <button onclick="runLocalInfo()" class="bg-sky-600 rounded px-4 py-2 font-semibold">Show browser network context</button>
+            </div>
+            <pre id="localOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 whitespace-pre-wrap">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra geo local
+sarra geo --format json local</pre>
+          </div>
+        </div>
+      </section>

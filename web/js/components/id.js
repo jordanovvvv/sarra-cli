@@ -1,0 +1,50 @@
+// GENERATED from components/id.html — do not edit directly.
+// Edit the HTML source, then run: npm run web:inline
+document.querySelector('[data-component="id"]').innerHTML = `<section id="sec-id" class="space-y-4">
+        <div>
+          <h2 class="text-xl font-bold">🆔 id — Identifiers, Tokens, UUIDs</h2>
+          <p class="text-sm text-slate-400">Generate UUID v4/v7 and secure random tokens. Mirrors <code>sarra id uuid</code> and <code>sarra id random</code>. <a class="text-sky-400 underline" href="#sec-docs">Full docs →</a></p>
+        </div>
+        <div class="grid gap-4 lg:grid-cols-2">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">uuid — Generate UUIDs</h3>
+            <p class="text-xs text-slate-400 mt-1">v4 random (default) · v7 time-ordered, recommended for DB keys.</p>
+            <div class="grid grid-cols-2 gap-3 mt-3 text-sm">
+              <label class="block">Version
+                <select id="uuidVersion" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-2 py-2">
+                  <option value="v4">v4</option><option value="v7">v7</option>
+                </select>
+              </label>
+              <label class="block">Count (1–100)
+                <input id="uuidCount" type="number" value="5" min="1" max="100" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-2 py-2" />
+              </label>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button onclick="runUuid()" class="bg-sky-600 hover:bg-sky-500 rounded px-4 py-2 text-sm font-semibold">Generate</button>
+              <button onclick="copyText('uuidOut')" class="bg-slate-800 hover:bg-slate-700 rounded px-3 py-2 text-sm">Copy</button>
+              <button onclick="downloadText('uuidOut','uuids.txt')" class="bg-slate-800 hover:bg-slate-700 rounded px-3 py-2 text-sm">Download</button>
+            </div>
+            <pre id="uuidOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 overflow-auto max-h-56 whitespace-pre-wrap">Output appears here…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra id uuid --uuid-version v7 --count 5</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">random — Secure random tokens</h3>
+            <p class="text-xs text-slate-400 mt-1">Hex tokens, <code>length</code> = bytes (16 bytes → 32 hex chars).</p>
+            <div class="grid grid-cols-2 gap-3 mt-3 text-sm">
+              <label class="block">Bytes (1–64)
+                <input id="randLength" type="number" value="16" min="1" max="64" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-2 py-2" />
+              </label>
+              <label class="block">Count (1–100)
+                <input id="randCount" type="number" value="3" min="1" max="100" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-2 py-2" />
+              </label>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button onclick="runRandom()" class="bg-sky-600 hover:bg-sky-500 rounded px-4 py-2 text-sm font-semibold">Generate</button>
+              <button onclick="copyText('randOut')" class="bg-slate-800 hover:bg-slate-700 rounded px-3 py-2 text-sm">Copy</button>
+              <button onclick="downloadText('randOut','tokens.txt')" class="bg-slate-800 hover:bg-slate-700 rounded px-3 py-2 text-sm">Download</button>
+            </div>
+            <pre id="randOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 overflow-auto max-h-56 whitespace-pre-wrap">Output appears here…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra id random --length 32 --count 5</pre>
+          </div>
+        </div>
+      </section>`;

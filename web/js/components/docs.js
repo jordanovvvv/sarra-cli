@@ -1,0 +1,55 @@
+// GENERATED from components/docs.html — do not edit directly.
+// Edit the HTML source, then run: npm run web:inline
+document.querySelector('[data-component="docs"]').innerHTML = `<section id="sec-docs" class="space-y-4">
+        <div>
+          <h2 class="text-xl font-bold">📚 docs — Detailed reference + MkDocs</h2>
+          <p class="text-sm text-slate-400">Each card above shows its CLI equivalent. This viewer renders the package's <code>docs/*.md</code> files (same source as <code>--help</code>) with MkDocs-style navigation.</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div class="flex flex-wrap gap-2 items-center text-sm">
+            <select id="docSelect" class="bg-slate-800 border border-slate-700 rounded px-2 py-2">
+              <option value="id-help.md">id — identifiers</option>
+              <option value="crypto-help.md">crypto</option>
+              <option value="data-help.md">data</option>
+              <option value="qrcode-help.md">qrcode</option>
+              <option value="time-help.md">time</option>
+              <option value="ssl-help.md">ssl</option>
+              <option value="geo-help.md">geo</option>
+            </select>
+            <button onclick="loadDoc()" class="bg-sky-600 rounded px-4 py-2 font-semibold">Load doc</button>
+            <span class="text-xs text-slate-400">Serve the repo root for fetch to work, e.g. <code>npx serve .</code> then open <code>/web/index.html</code>.</span>
+          </div>
+          <article id="docView" class="prose prose-invert prose-sm max-w-none mt-4 bg-slate-950 border border-slate-800 rounded p-5 overflow-auto max-h-[32rem]">Choose a document to render it here.</article>
+          <div class="grid md:grid-cols-2 gap-4 mt-4 text-xs">
+            <div class="bg-slate-950 border border-slate-800 rounded p-4">
+              <h4 class="font-semibold text-sm">Run the full MkDocs site (recommended for publishing)</h4>
+              <pre class="mt-2 bg-black/50 rounded p-3 overflow-auto">pip install mkdocs-material
+mkdocs serve   # serves docs/ + README at localhost:8000</pre>
+              <p class="text-slate-400 mt-2">Minimal <code>mkdocs.yml</code> is included at the repo root and points at the existing <code>docs/*.md</code> files — no duplication:</p>
+              <pre class="mt-2 bg-black/50 rounded p-3 overflow-auto">site_name: Sarra CLI
+theme: { name: material }
+nav:
+  - Home: README.md
+  - id: docs/id-help.md
+  - crypto: docs/crypto-help.md
+  - data: docs/data-help.md
+  - qr: docs/qrcode-help.md
+  - time: docs/time-help.md
+  - ssl: docs/ssl-help.md
+  - geo: docs/geo-help.md</pre>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 rounded p-4">
+              <h4 class="font-semibold text-sm">Doc → CLI → Web map</h4>
+              <ul class="list-disc ml-5 mt-2 space-y-1 text-slate-300">
+                <li><code>docs/id-help.md</code> → <code>sarra id</code> → ID section (UUID versions, counts, JSON parity).</li>
+                <li><code>docs/crypto-help.md</code> → <code>sarra crypto</code> → hash/base64/AES/RSA cards.</li>
+                <li><code>docs/data-help.md</code> → <code>sarra data json</code> → format/query/merge/CSV.</li>
+                <li><code>docs/qrcode-help.md</code> → <code>sarra qr</code> → EC levels L/M/Q/H, sizes, colors.</li>
+                <li><code>docs/time-help.md</code> → <code>sarra time</code> → ISO/unix/ms/date/time/locale.</li>
+                <li><code>docs/ssl-help.md</code> → <code>sarra ssl</code> → self-signed vs Let's Encrypt trust guide.</li>
+                <li><code>docs/geo-help.md</code> → <code>sarra geo</code> → offline validate vs online lookup limits.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>`;

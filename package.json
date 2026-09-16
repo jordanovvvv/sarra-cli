@@ -20,6 +20,7 @@
     "dev": "npm run build && npm link",
     "build": "tsc && node src/scripts/copy-assets.js",
     "test": "npm run build && node --test test/*.test.js",
+    "web:inline": "node scripts/web-inline.js",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {

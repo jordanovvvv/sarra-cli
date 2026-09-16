@@ -1,0 +1,44 @@
+// GENERATED from components/ssl.html — do not edit directly.
+// Edit the HTML source, then run: npm run web:inline
+document.querySelector('[data-component="ssl"]').innerHTML = `<section id="sec-ssl" class="space-y-4">
+        <div>
+          <h2 class="text-xl font-bold">🌐 ssl — Self-signed &amp; Let's Encrypt</h2>
+          <p class="text-sm text-slate-400">Self-signed generation runs locally via Forge (same RSA-2048/SHA-256/SAN profile as <code>sarra ssl generate</code>). Let's Encrypt requires a server + certbot, so this tab builds the exact command.</p>
+        </div>
+        <div class="grid gap-4 lg:grid-cols-2">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">generate — self-signed (dev only)</h3>
+            <div class="grid grid-cols-2 gap-2 mt-3 text-sm">
+              <label class="text-xs">Domain<input id="sslDomain" value="localhost" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-2 py-2" /></label>
+              <label class="text-xs">Validity days (≤365)<input id="sslValidity" type="number" value="365" min="1" max="365" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-2 py-2" /></label>
+            </div>
+            <div class="flex gap-2 mt-3 text-sm">
+              <button onclick="runSslGen()" class="bg-sky-600 rounded px-4 py-2 font-semibold">Generate</button>
+              <button onclick="downloadText('sslCert','localhost.crt')" class="bg-slate-800 rounded px-3 py-2">Download .crt</button>
+              <button onclick="downloadText('sslKey','localhost.key')" class="bg-slate-800 rounded px-3 py-2">Download .key</button>
+            </div>
+            <p id="sslStatus" class="text-xs text-slate-400 mt-2">RSA-2048 generation takes ~1–3s in the browser.</p>
+            <h4 class="text-xs font-semibold mt-3 text-slate-300">Certificate (PEM)</h4>
+            <pre id="sslCert" class="text-[11px] bg-slate-950 border border-slate-800 rounded p-3 overflow-auto max-h-48 whitespace-pre-wrap">…</pre>
+            <h4 class="text-xs font-semibold mt-2 text-slate-300">Private key (PEM — keep secret)</h4>
+            <pre id="sslKey" class="text-[11px] bg-slate-950 border border-slate-800 rounded p-3 overflow-auto max-h-48 whitespace-pre-wrap">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra ssl generate --domain myapp.local --validity 90 -o ./certs</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">letsencrypt — production (command builder)</h3>
+            <div class="grid gap-2 mt-3 text-sm">
+              <input id="leDomain" placeholder="example.com" class="bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+              <input id="leEmail" placeholder="admin@example.com" class="bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+              <select id="leMode" class="bg-slate-800 border border-slate-700 rounded px-2 py-2"><option value="standalone">standalone (port 80 free)</option><option value="webroot">webroot (existing server)</option></select>
+              <input id="leWebroot" placeholder="/var/www/html (webroot only)" class="bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+              <label class="text-xs flex items-center gap-2"><input id="leStaging" type="checkbox" checked class="accent-sky-500" /> --staging first (recommended, avoids rate limits)</label>
+            </div>
+            <button onclick="runLeBuilder()" class="mt-3 bg-sky-600 rounded px-4 py-2 text-sm font-semibold">Build command</button>
+            <pre id="leOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 overflow-auto whitespace-pre-wrap">…</pre>
+            <div class="text-xs text-slate-400 mt-2 space-y-1">
+              <p>Prereqs: certbot installed, real DNS → this server, port 80 open. Never works for localhost/.local — use self-signed above.</p>
+              <p>Docs: <code>docs/ssl-help.md</code> · trust-install steps in the Docs tab.</p>
+            </div>
+          </div>
+        </div>
+      </section>`;

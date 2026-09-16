@@ -1,0 +1,19 @@
+site_name: Sarra CLI
+site_description: Daily developer enhancement tools
+theme:
+  name: material
+nav:
+  - Home: README.md
+  - id — Identifiers: docs/id-help.md
+  - crypto — Cryptography: docs/crypto-help.md
+  - data — JSON utilities: docs/data-help.md
+  - qr — QR codes: docs/qrcode-help.md
+  - time — Timestamps: docs/time-help.md
+  - ssl — Certificates: docs/ssl-help.md
+  - geo — IP utilities: docs/geo-help.md
+  - Web workspace: web/index.html
+markdown_extensions:
+  - codehilite
+  - admonition
+  - toc:
+      permalink: true

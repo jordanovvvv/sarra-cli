@@ -1,0 +1,61 @@
+// GENERATED from components/time.html — do not edit directly.
+// Edit the HTML source, then run: npm run web:inline
+document.querySelector('[data-component="time"]').innerHTML = `<section id="sec-time" class="space-y-4">
+        <div>
+          <h2 class="text-xl font-bold">⏱️ time — Date &amp; time utilities</h2>
+          <p class="text-sm text-slate-400">Mirrors <code>sarra time now|convert|add|diff|parse</code>. All parsing rules match the CLI (Unix s vs ms auto-detect).</p>
+        </div>
+        <div class="grid gap-4 lg:grid-cols-2">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">now</h3>
+            <div class="flex flex-wrap gap-2 mt-3 text-sm items-center">
+              <select id="nowFormat" class="bg-slate-800 border border-slate-700 rounded px-2 py-2"><option value="iso">iso</option><option value="unix">unix (s)</option><option value="ms">ms</option><option value="date">date</option><option value="time">time</option><option value="locale">locale</option></select>
+              <button onclick="runTimeNow()" class="bg-sky-600 rounded px-4 py-2 font-semibold">Now</button>
+              <button onclick="copyText('timeNowOut')" class="bg-slate-800 rounded px-3 py-2">Copy</button>
+            </div>
+            <pre id="timeNowOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 overflow-auto">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra time now / sarra time now --unix / --ms / --format date</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">convert</h3>
+            <input id="convInput" placeholder='e.g. 1737468322 or 2026-01-21T13:45:22.123Z' class="mt-3 w-full text-sm bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+            <div class="flex gap-2 mt-2 text-sm">
+              <select id="convTo" class="bg-slate-800 border border-slate-700 rounded px-2 py-2"><option>iso</option><option>unix</option><option>ms</option><option>date</option><option>time</option><option>locale</option></select>
+              <button onclick="runConvert()" class="bg-sky-600 rounded px-4 py-2 font-semibold">Convert</button>
+            </div>
+            <pre id="convOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra time convert 1737468322 --to iso</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">add / subtract</h3>
+            <input id="addBase" placeholder="Base timestamp (empty = now)" class="mt-3 w-full text-sm bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+            <div class="grid grid-cols-4 gap-2 mt-2 text-sm">
+              <label class="text-xs">Days<input id="addD" type="number" value="1" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-2 py-1" /></label>
+              <label class="text-xs">Hours<input id="addH" type="number" value="0" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-2 py-1" /></label>
+              <label class="text-xs">Mins<input id="addM" type="number" value="0" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-2 py-1" /></label>
+              <label class="text-xs">Secs<input id="addS" type="number" value="0" class="mt-1 w-full bg-slate-800 border border-slate-700 rounded px-2 py-1" /></label>
+            </div>
+            <button onclick="runTimeAdd()" class="mt-3 bg-sky-600 rounded px-4 py-2 text-sm font-semibold">Add (negatives subtract)</button>
+            <pre id="addOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra time add --days 5 --hours 2
+sarra time add "2026-01-21T10:00:00Z" --days -3</pre>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="font-semibold">diff / parse</h3>
+            <div class="grid gap-2 mt-3 text-sm">
+              <input id="diffA" placeholder="timestamp 1" class="bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+              <input id="diffB" placeholder="timestamp 2 (empty = now)" class="bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+              <div class="flex gap-2">
+                <select id="diffUnit" class="bg-slate-800 border border-slate-700 rounded px-2 py-2"><option>seconds</option><option>ms</option><option>minutes</option><option>hours</option><option>days</option></select>
+                <label class="text-xs flex items-center gap-1"><input id="diffAbs" type="checkbox" class="accent-sky-500" /> abs</label>
+                <button onclick="runTimeDiff()" class="bg-sky-600 rounded px-4 py-2 font-semibold">Diff</button>
+              </div>
+              <input id="parseInput" placeholder='parse, e.g. 2026-01-21' class="bg-slate-800 border border-slate-700 rounded px-3 py-2" />
+              <button onclick="runTimeParse()" class="bg-slate-700 rounded px-4 py-2">Parse (verbose)</button>
+            </div>
+            <pre id="diffOut" class="mt-3 text-xs bg-slate-950 border border-slate-800 rounded p-3 whitespace-pre-wrap">…</pre>
+            <pre class="mt-2 text-[11px] bg-black/40 rounded p-2 overflow-auto">sarra time diff "2026-01-21T00:00:00Z" "2026-02-01T00:00:00Z" --unit days
+sarra time parse "2026-01-21" --verbose</pre>
+          </div>
+        </div>
+      </section>`;
