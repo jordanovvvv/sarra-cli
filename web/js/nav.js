@@ -1,16 +1,20 @@
 // ---------- nav ----------
-document.querySelectorAll('.nav-btn[data-target]').forEach(b => {
-  b.addEventListener('click', () => {
-    const el = document.getElementById(b.dataset.target);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    if (window.innerWidth < 768) $('sidebar').classList.add('hidden'), $('sidebar').classList.remove('flex');
-  });
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('.nav-btn[data-target]');
+  if (!button) return;
+  if (typeof window.activateWorkspaceTab === 'function') {
+    window.activateWorkspaceTab(button.dataset.target);
+  }
+  if (window.innerWidth < 768 && button.closest('#sideNav')) {
+    $('sidebar').classList.add('hidden');
+    $('sidebar').classList.remove('flex');
+  }
 });
 $('menuBtn').addEventListener('click', () => {
   const s = $('sidebar');
-  s.classList.toggle('hidden'); s.classList.toggle('flex'); s.classList.toggle('flex-col');
+  const isHidden = s.classList.toggle('hidden');
+  s.classList.toggle('flex', !isHidden);
+  s.classList.add('flex-col');
 });
 $('navSearch').addEventListener('input', (e) => {
   const q = e.target.value.toLowerCase();
